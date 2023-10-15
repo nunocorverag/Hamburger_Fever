@@ -72,6 +72,12 @@ number_elements_list = [0,0,0,0,0]
 #Customer order
 requested_order = [1,1,1,2,1]
 
+# Time tracking variables
+start_time = 0
+elapsed_time = 0
+message_display_time = 2000
+show_message = False
+
 running = True
 while running:
     screen.fill((0,0,0))
@@ -111,15 +117,31 @@ while running:
             if event.key == pygame.K_SPACE:
                 print("Pressed: SPACE")
                 #Deliver order
-                if requested_order == object_order:
+                # Start the timer
+                if start_time == 0:
+                    start_time = pygame.time.get_ticks()
+                    
+                print(number_elements_list)
+                if requested_order == number_elements_list:
                         message = show_order_delivered_message(True)
                 else:
                         message = show_order_delivered_message(False)
-                screen.blit(message, (150, 50))
+                show_message = True
 
-    num_objects = len(object_order)
+    # Show the message for 2 seconds
+    # Show the message for a specified duration
+    if show_message:
+        #Subtract to the current time the time when the spacebar was pressed
+        elapsed_time = pygame.time.get_ticks() - start_time
+        screen.blit(message, (150, 50))
+        #Check if the time is higher than the message display time specified
+        if elapsed_time >= message_display_time:
+            show_message = False
+            start_time = 0  # Reset the start time
+            elapsed_time = 0  # Reset the elapsed time
 
     #NOTE: IDK I used this formula to solve the speed problem
+    num_objects = len(object_order)
     speed = base_speed * num_objects
 
     for i in range(len(object_order)):
@@ -131,6 +153,5 @@ while running:
             if not isCollision(object_order[i].xPosition, object_order[i].yPosition, object_order[i - 1].xPosition, object_order[i - 1].yPosition):
                 object_order[i].yPosition += speed
 
-    print(number_elements_list)
     #Update the display
     pygame.display.update() 

@@ -2,6 +2,9 @@ import pygame
 import math
 import random
 
+#Handle music in the game
+from pygame import mixer
+
 #Initialize the game
 pygame.init()
 
@@ -11,6 +14,10 @@ screen = pygame.display.set_mode((800,600))
 #Background
 background_image = pygame.image.load("images/background.jpg")
 background_image = pygame.transform.scale(background_image, (800, 600))
+
+#Background Sound
+mixer.music.load("music/background_music.mp3")
+mixer.music.play(-1)
 
 #Order font
 order_font = pygame.font.Font("freesansbold.ttf", 20)
@@ -42,7 +49,7 @@ show_message = False
 #Initialize requested order variable
 requested_order = None
 
-class food_element:
+class food_element():
     def __init__(self, x, y, food_name):
         self.xPosition = x
         self.yPosition = y
@@ -64,6 +71,24 @@ class food_element:
         self.image = pygame.transform.scale(self.image, (100,100))
 
         screen.blit(self.image, (self.xPosition, self.yPosition))
+
+class AngryBar():
+    def __init__(self, x, y, w, h, max_angriness):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.angriness = 0
+        self.max_angriness = max_angriness
+
+    def draw(self, surface):
+        #Calculate angriness ratio
+        ratio = self.angriness / self.max_angriness
+        pygame.draw.rect(surface, "gray", (self.x, self.y, self.w, self.h))
+        pygame.draw.rect(surface, "red", (self.x, self.y, self.w * ratio, self.h))
+
+#Create an angry bar object
+angry_bar = AngryBar(10, 10, 300, 40, 100)
 
 def isCollision(object2_x, object2_y, object1_x, object1_y):
     # Distance between two points D = sqrt*(x2 - x1)^2 + (y2 - y1)^2)
@@ -128,6 +153,9 @@ while running:
         screen.blit(text_surface, (600, y))  # Adjust the position of the text
         y += 30  # Ajust the spaces between lines
 
+    #Draw angry bar
+    angry_bar.draw(screen)
+
     for event in pygame.event.get():
         # Quit the game
         if event.type == pygame.QUIT:
@@ -169,8 +197,11 @@ while running:
                 print(number_elements_list)
                 if requested_order == number_elements_list:
                         message = show_order_delivered_message(True)
+                        if angry_bar.angriness >=10:
+                            angry_bar.angriness += -10     
                 else:
                         message = show_order_delivered_message(False)
+                        angry_bar.angriness += 10
                 show_message = True
                 requested_order = None
                 object_order = []
@@ -181,7 +212,7 @@ while running:
     if show_message:
         #Subtract to the current time the time when the spacebar was pressed
         elapsed_time = pygame.time.get_ticks() - start_time
-        screen.blit(message, (150, 50))
+        screen.blit(message, (10, 70))
         #Check if the time is higher than the message display time specified
         if elapsed_time >= message_display_time:
             show_message = False

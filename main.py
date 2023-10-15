@@ -12,8 +12,35 @@ screen = pygame.display.set_mode((800,600))
 background_image = pygame.image.load("images/background.jpg")
 background_image = pygame.transform.scale(background_image, (800, 600))
 
-#Delivered order text
+#Order font
+order_font = pygame.font.Font("freesansbold.ttf", 20)
+
+#Delivered order font
 delivered_font = pygame.font.Font("freesansbold.ttf", 20)
+
+#deliver order
+deliver_order = False
+#Initial speed of falling objects, it will increase as there are more objects, since the refresh gets slower as adding new objects
+base_speed = 0.2
+
+object_order = []
+
+#This array will get the number of each element
+#   bottom_bread -> 0
+#   meat -> 1
+#   lettuce -> 2
+#   tomato -> 3
+#   top_bread -> 4
+number_elements_list = [0,0,0,0,0]
+
+# Time tracking variables
+start_time = 0
+elapsed_time = 0
+message_display_time = 2000
+show_message = False
+
+#Initialize requested order variable
+requested_order = None
 
 class food_element:
     def __init__(self, x, y, food_name):
@@ -53,35 +80,53 @@ def show_order_delivered_message(successful):
         delivered_message = delivered_font.render("Order delivered incorrectly", True, (255,0,0))
     return delivered_message
 
-#deliver order
-deliver_order = False
+def show_order(requested_order):
+    order_message = ""
+    for i in range(len(requested_order)):
+        if i == 0:
+            element_name = "top bread"
+        elif i == 1:
+            element_name = "meat"
+        elif i == 2:
+            element_name = "lettuce"
+        elif i == 3:
+            element_name = "tomato"
+        elif i == 4:
+            element_name = "bottom bread"
 
-#Initial speed of falling objects, it will increase as there are more objects, since the refresh gets slower as adding new objects
-base_speed = 0.2
+        order_message += str(requested_order[i]) + " x " + str(element_name) + "\n"
+    
+    return order_message
 
-object_order = []
+#create customer order
+def create_order():
+    bottom_bread_num = 1
+    meat_num = random.randint(1,3)
+    lettuce_num = random.randint(0,3)
+    tomato_num = random.randint(0,3)
+    top_bread_num = 1
+    requested_order = [bottom_bread_num, meat_num, lettuce_num, tomato_num, top_bread_num]
 
-#This array will get the number of each element
-#   bottom_bread -> 0
-#   meat -> 1
-#   lettuce -> 2
-#   tomato -> 3
-#   top_bread -> 4
-number_elements_list = [0,0,0,0,0]
+    return requested_order
 
-#Customer order
-requested_order = [1,1,1,2,1]
-
-# Time tracking variables
-start_time = 0
-elapsed_time = 0
-message_display_time = 2000
-show_message = False
 
 running = True
 while running:
     screen.fill((0,0,0))
     screen.blit(background_image, (0,0))
+
+    if requested_order == None:
+        requested_order = create_order()
+
+    # Show the requested order message
+    order_text = show_order(requested_order)
+    lines = order_text.split('\n')
+    y = 20  # Initial y position
+
+    for line in lines:
+        text_surface = order_font.render(line, True, (0, 0, 0))
+        screen.blit(text_surface, (600, y))  # Adjust the position of the text
+        y += 30  # Ajust the spaces between lines
 
     for event in pygame.event.get():
         # Quit the game
@@ -127,6 +172,9 @@ while running:
                 else:
                         message = show_order_delivered_message(False)
                 show_message = True
+                requested_order = None
+                object_order = []
+                number_elements_list = [0,0,0,0,0]
 
     # Show the message for 2 seconds
     # Show the message for a specified duration

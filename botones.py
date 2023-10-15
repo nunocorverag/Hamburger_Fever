@@ -20,6 +20,3 @@ class button():
         surface.blit(self.image, (self.rect.x, self.rect.y)) 
 
         return action
-    
-while True:
-    new_button = button(100,100,"start_btn.jpeg", 10)

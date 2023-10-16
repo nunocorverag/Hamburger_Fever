@@ -1,7 +1,5 @@
 import pygame
-import math
 import random
-import botones
 
 #Handle music in the game
 from pygame import mixer
@@ -78,6 +76,7 @@ class food_element():
         self.image = None
         self.spdy = 0
         self.move = True
+        self.calculo_rebote = 0
     
     def draw(self):
         self.image = pygame.image.load("images/food/" + self.food_name + ".png").convert_alpha()
@@ -102,9 +101,12 @@ class AngryBar():
 #Create an angry bar object
 angry_bar = AngryBar(10, 10, 300, 40, 100)
 
-def isCollision(object2_y,object1_y):
+def isCollision(object2_y,object1_y,i):
     # Distance between two points D = sqrt*(x2 - x1)^2 + (y2 - y1)^2)
-    if object1_y - 25 < object2_y:
+    if i == 0:
+        if object_order[i].yPosition > 550:
+            return True
+    elif object1_y - 25 < object2_y:
         return True
     else: return False
 
@@ -151,19 +153,18 @@ def game_over_text():
 def check_collisions(i):
     object_order[i].yPosition += object_order[i].spdy
 
-    if isCollision(object_order[i].yPosition, object_order[i - 1].yPosition):
-        calculo_rebote = -(abs(object_order[i].spdy) * rebote)
-
-        print(calculo_rebote, i)
-        if calculo_rebote < -1.5:
-            object_order[i].spdy = calculo_rebote
+    if isCollision(object_order[i].yPosition, object_order[i - 1].yPosition,i):
+        object_order[i].calculo_rebote = -(abs(object_order[i].spdy) * rebote)
+        
+        if object_order[i].calculo_rebote < -1.5:
+            object_order[i].spdy = object_order[i].calculo_rebote
             object_order[i].yPosition += object_order[i].spdy
         else:
             object_order[i].spdy = 0
             if object_order[i-1].move == False:
                 object_order[i].move = False
 
-    while isCollision(object_order[i].yPosition, object_order[i - 1].yPosition):
+    while isCollision(object_order[i].yPosition, object_order[i - 1].yPosition,i):
         object_order[i].yPosition -= 1
 
 fps = pygame.time.Clock()
@@ -277,13 +278,9 @@ while running:
 
         for i in range(len(object_order)):
             object_order[i].spdy += gravity
-            if i == 0:        
-                if object_order[i].yPosition < 550:
-                     object_order[i].move = False
-                     object_order[i].yPosition += object_order[i].spdy
-            else:
-                if object_order[i].move == True:
-                    check_collisions(i)
+
+            if object_order[i].move == True:
+                check_collisions(i)
 
             object_order[i].draw()
                         

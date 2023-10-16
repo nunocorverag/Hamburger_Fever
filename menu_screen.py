@@ -20,14 +20,29 @@ title_font = pygame.font.Font("freesansbold.ttf", 64)
 hamburger_image = pygame.image.load("images/food/hamburger.png")
 hamburger_image = pygame.transform.scale(hamburger_image, (200, 200))
 
+# Font configuration
+font = pygame.font.Font("freesansbold.ttf", 36)
 
 def title_text(screen):
     title_text = title_font.render("Hamburger Fever", True, (255,255,255))
     screen.blit(title_text, (250, 150))
 
-# Font configuration
-font = pygame.font.Font("freesansbold.ttf", 36)
 class MenuScreen:
+
+    # Función para verificar si se hizo clic en el botón de inicio
+    def check_start_click(mouse_pos):
+        start_button_rect = start_button_image.get_rect(topleft=(210, 450))
+        if start_button_rect.collidepoint(mouse_pos):
+            return True
+        return False
+
+    # Función para verificar si se hizo clic en el botón de salida
+    def check_exit_click(mouse_pos):
+        exit_button_rect = exit_button_image.get_rect(topleft=(610, 450))
+        if exit_button_rect.collidepoint(mouse_pos):
+            return True
+        return False
+    
     def __init__(self, screen):
         self.screen = screen
 
@@ -37,4 +52,3 @@ class MenuScreen:
         title_text(self.screen)
         self.screen.blit(start_button_image, (210,450))
         self.screen.blit(exit_button_image, (610,450))
-        pygame.display.update()

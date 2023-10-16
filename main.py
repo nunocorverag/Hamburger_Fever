@@ -79,8 +79,8 @@ class food_element():
         self.calculo_rebote = 0
     
     def draw(self):
-        self.image = pygame.image.load("images/food/" + self.food_name + ".png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (100,100))
+        self.image = pygame.image.load("images/food/Final_Sprites/" + self.food_name + ".png").convert_alpha()
+        ##self.image = pygame.transform.scale(self.image, (100,100))
         screen.blit(self.image, (self.xPosition, self.yPosition))
 
 class AngryBar():
@@ -106,7 +106,7 @@ def isCollision(object2_y,object1_y,i):
     if i == 0:
         if object_order[i].yPosition > 550:
             return True
-    elif object1_y - 25 < object2_y:
+    elif object1_y - 30 < object2_y:
         return True
     else: return False
 
@@ -121,15 +121,15 @@ def show_order(requested_order):
     order_message = ""
     for i in range(len(requested_order)):
         if i == 0:
-            element_name = "top bread"
+            element_name = "Top_bun"
         elif i == 1:
-            element_name = "meat"
+            element_name = "Meat"
         elif i == 2:
-            element_name = "lettuce"
+            element_name = "Lettuce"
         elif i == 3:
-            element_name = "tomato"
+            element_name = "Tomatoe"
         elif i == 4:
-            element_name = "bottom bread"
+            element_name = "Under-bun"
 
         order_message += str(requested_order[i]) + " x " + str(element_name) + "\n"
     
@@ -189,27 +189,27 @@ while running:
                 #This checks if the key pressed is the left arrow
                 if event.key == pygame.K_f:
                     print("Pressed: f")
-                    bottom_bread = food_element(490, -70, "bottom_bread")
+                    bottom_bread = food_element(490, -70, "Under-bun")
                     object_order.append(bottom_bread)
                     number_elements_list[0] += 1
                 if event.key == pygame.K_d:
                     print("Pressed: d")
-                    meat = food_element(490, -70, "meat")
+                    meat = food_element(490, -70, "Meat")
                     object_order.append(meat)
                     number_elements_list[1] += 1
                 if event.key == pygame.K_s:
                     print("Pressed: s")
-                    lettuce = food_element(490, -70, "lettuce")
+                    lettuce = food_element(490, -70, "Lettuce")
                     object_order.append(lettuce)
                     number_elements_list[2] += 1
                 if event.key == pygame.K_k:
                     print("Pressed: k")
-                    tomato = food_element(490, -70, "tomato")
+                    tomato = food_element(490, -70, "Tomatoe")
                     object_order.append(tomato)
                     number_elements_list[3] += 1
                 if event.key == pygame.K_j:
                     print("Pressed: j")
-                    top_bread = food_element(490, -70, "top_bread")
+                    top_bread = food_element(490, -70, "Top_bun")
                     object_order.append(top_bread)
                     number_elements_list[4] += 1
                 if event.key == pygame.K_SPACE:

@@ -80,7 +80,6 @@ class food_element():
     
     def draw(self):
         self.image = pygame.image.load("images/food/Final_Sprites/" + self.food_name + ".png").convert_alpha()
-        ##self.image = pygame.transform.scale(self.image, (100,100))
         screen.blit(self.image, (self.xPosition, self.yPosition))
 
 class AngryBar():
@@ -189,27 +188,27 @@ while running:
                 #This checks if the key pressed is the left arrow
                 if event.key == pygame.K_f:
                     print("Pressed: f")
-                    bottom_bread = food_element(490, -70, "Under-bun")
+                    bottom_bread = food_element(444, -70, "Under-bun")
                     object_order.append(bottom_bread)
                     number_elements_list[0] += 1
                 if event.key == pygame.K_d:
                     print("Pressed: d")
-                    meat = food_element(490, -70, "Meat")
+                    meat = food_element(460, -70, "Meat")
                     object_order.append(meat)
                     number_elements_list[1] += 1
                 if event.key == pygame.K_s:
                     print("Pressed: s")
-                    lettuce = food_element(490, -70, "Lettuce")
+                    lettuce = food_element(456, -70, "Lettuce")
                     object_order.append(lettuce)
                     number_elements_list[2] += 1
                 if event.key == pygame.K_k:
                     print("Pressed: k")
-                    tomato = food_element(490, -70, "Tomatoe")
+                    tomato = food_element(480, -70, "Tomatoe")
                     object_order.append(tomato)
                     number_elements_list[3] += 1
                 if event.key == pygame.K_j:
                     print("Pressed: j")
-                    top_bread = food_element(490, -70, "Top_bun")
+                    top_bread = food_element(444, -70, "Top_bun")
                     object_order.append(top_bread)
                     number_elements_list[4] += 1
                 if event.key == pygame.K_SPACE:

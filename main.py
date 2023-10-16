@@ -39,9 +39,6 @@ over_font = pygame.font.Font("freesansbold.ttf", 64)
 #deliver order
 deliver_order = False
 
-#Initial speed of falling objects, it will increase as there are more objects, since the refresh gets slower as adding new objects
-base_speed = 4
-
 object_order = []
 
 #This array will get the number of each element
@@ -58,6 +55,9 @@ elapsed_time = 0
 message_display_time = 2000
 show_message = False
 
+##daclare acceleration (gravity)
+gravity = 2
+
 #Initialize requested order variable
 requested_order = None
 
@@ -73,6 +73,8 @@ class food_element():
         self.yPosition = y
         self.food_name = food_name
         self.image = None
+        self.spdy = 0
+        self.move = True
     
     def draw(self):
         self.image = pygame.image.load("images/food/" + self.food_name + ".png").convert_alpha()
@@ -97,13 +99,11 @@ class AngryBar():
 #Create an angry bar object
 angry_bar = AngryBar(10, 10, 300, 40, 100)
 
-def isCollision(object2_x, object2_y, object1_x, object1_y):
+def isCollision(object2_y,object1_y):
     # Distance between two points D = sqrt*(x2 - x1)^2 + (y2 - y1)^2)
-    distance = math.sqrt(math.pow(object2_x - object1_x,2) + math.pow(object2_y - object1_y,2))
-    if (distance < 25):
+    if object1_y - 25 < object2_y:
         return True
-    else:
-        return False
+    else: return False
 
 def show_order_delivered_message(successful):
     if successful:
@@ -253,18 +253,24 @@ while running:
                 start_time = 0  # Reset the start time
                 elapsed_time = 0  # Reset the elapsed time
 
-        #NOTE: IDK I used this formula to solve the speed problem
-        # num_objects = len(object_order)
-        speed = base_speed
-
         for i in range(len(object_order)):
-            object_order[i].draw()
-            if i == 0:        
-                if object_order[i].yPosition < 550:
-                    object_order[i].yPosition += speed
-            else:
-                if not isCollision(object_order[i].xPosition, object_order[i].yPosition, object_order[i - 1].xPosition, object_order[i - 1].yPosition):
-                    object_order[i].yPosition += speed
+                object_order[i].spdy += gravity
+                object_order[i].draw()
+                if object_order[i].move == True:
+                    if i == 0:        
+                        if object_order[i].yPosition < 550:
+                            object_order[i].yPosition += object_order[i].spdy
+                    else:
+                        if not isCollision(object_order[i].yPosition, object_order[i - 1].yPosition):
+                            object_order[i].yPosition += object_order[i].spdy
+                        else:
+                            object_order[i].spdy = 0
+                            object_order[i].move = False
+
+                        while isCollision(object_order[i].yPosition, object_order[i - 1].yPosition):
+                                object_order[i].yPosition -= 1
+                        
+                
 
     # Refresh the screen
     pygame.display.update()

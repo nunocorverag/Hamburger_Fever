@@ -58,6 +58,9 @@ show_message = False
 ##daclare acceleration (gravity)
 gravity = 2
 
+## How much the object will bounce in a collision, must be a balue between 0 and 1
+rebote = 0.5
+
 #Initialize requested order variable
 requested_order = None
 
@@ -145,6 +148,24 @@ def game_over_text():
     over_text = over_font.render("GAME OVER : ", True, (255,255,255))
     screen.blit(over_text, (200, 250))
 
+def check_collisions(i):
+    object_order[i].yPosition += object_order[i].spdy
+
+    if isCollision(object_order[i].yPosition, object_order[i - 1].yPosition):
+        calculo_rebote = -(abs(object_order[i].spdy) * rebote)
+
+        print(calculo_rebote, i)
+        if calculo_rebote < -1.5:
+            object_order[i].spdy = calculo_rebote
+            object_order[i].yPosition += object_order[i].spdy
+        else:
+            object_order[i].spdy = 0
+            if object_order[i-1].move == False:
+                object_order[i].move = False
+
+    while isCollision(object_order[i].yPosition, object_order[i - 1].yPosition):
+        object_order[i].yPosition -= 1
+
 fps = pygame.time.Clock()
 
 running = True
@@ -217,6 +238,7 @@ while running:
 
     if start_game:
         fps.tick(30)
+        print(fps.get_fps())
 
         screen.fill((0,0,0))
         screen.blit(background_image, (0,0))
@@ -254,21 +276,16 @@ while running:
                 elapsed_time = 0  # Reset the elapsed time
 
         for i in range(len(object_order)):
-                object_order[i].spdy += gravity
-                object_order[i].draw()
+            object_order[i].spdy += gravity
+            if i == 0:        
+                if object_order[i].yPosition < 550:
+                     object_order[i].move = False
+                     object_order[i].yPosition += object_order[i].spdy
+            else:
                 if object_order[i].move == True:
-                    if i == 0:        
-                        if object_order[i].yPosition < 550:
-                            object_order[i].yPosition += object_order[i].spdy
-                    else:
-                        if not isCollision(object_order[i].yPosition, object_order[i - 1].yPosition):
-                            object_order[i].yPosition += object_order[i].spdy
-                        else:
-                            object_order[i].spdy = 0
-                            object_order[i].move = False
+                    check_collisions(i)
 
-                        while isCollision(object_order[i].yPosition, object_order[i - 1].yPosition):
-                                object_order[i].yPosition -= 1
+            object_order[i].draw()
                         
                 
 

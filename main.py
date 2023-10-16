@@ -6,15 +6,22 @@ import botones
 #Handle music in the game
 from pygame import mixer
 
+#Import the menu screen
+from menu_screen import MenuScreen
+
 #Initialize the game
 pygame.init()
 
 #Set up the screen dimensions
-screen = pygame.display.set_mode((800,600))
+screen = pygame.display.set_mode((1080,720))
+pygame.display.set_caption("Pantalla de Inicio")
+
+#Menu screen object
+menu = MenuScreen(screen)
 
 #Background
 background_image = pygame.image.load("images/background.jpg")
-background_image = pygame.transform.scale(background_image, (800, 600))
+background_image = pygame.transform.scale(background_image, (1080, 720))
 
 #Background Sound
 mixer.music.load("music/background_music.mp3")
@@ -25,6 +32,9 @@ order_font = pygame.font.Font("freesansbold.ttf", 20)
 
 #Delivered order font
 delivered_font = pygame.font.Font("freesansbold.ttf", 20)
+
+#Game Over text
+over_font = pygame.font.Font("freesansbold.ttf", 64)
 
 #deliver order
 deliver_order = False
@@ -58,19 +68,8 @@ class food_element():
         self.image = None
     
     def draw(self):
-        if self.food_name == "bottom_bread":
-            self.image = pygame.image.load("images/food/bottom_bread.png")
-        elif self.food_name == "meat":
-            self.image = pygame.image.load("images/food/meat.png")
-        elif self.food_name == "lettuce":
-            self.image = pygame.image.load("images/food/lettuce.png")
-        elif self.food_name == "tomato":
-            self.image = pygame.image.load("images/food/tomato.png")
-        elif self.food_name == "top_bread":
-            self.image = pygame.image.load("images/food/top_bread.png")
-
+        self.image = pygame.image.load("images/food/" + self.food_name + ".png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (100,100))
-
         screen.blit(self.image, (self.xPosition, self.yPosition))
 
 class AngryBar():
@@ -135,103 +134,132 @@ def create_order():
 
     return requested_order
 
+def game_over_text():
+    over_text = over_font.render("GAME OVER : ", True, (255,255,255))
+    screen.blit(over_text, (200, 250))
+
+fps = pygame.time.Clock()
 
 running = True
 while running:
-    screen.fill((0,0,0))
-    screen.blit(background_image, (0,0))
-
-    if requested_order == None:
-        requested_order = create_order()
-
-    # Show the requested order message
-    order_text = show_order(requested_order)
-    lines = order_text.split('\n')
-    y = 20  # Initial y position
-
-    for line in lines:
-        text_surface = order_font.render(line, True, (0, 0, 0))
-        screen.blit(text_surface, (600, y))  # Adjust the position of the text
-        y += 30  # Ajust the spaces between lines
-
-    #Draw angry bar
-    angry_bar.draw(screen)
 
     for event in pygame.event.get():
-        # Quit the game
         if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.KEYDOWN:
-            #This checks if the key pressed is the left arrow
-            if event.key == pygame.K_f:
-                print("Pressed: f")
-                bottom_bread = food_element(350, -70, "bottom_bread")
-                object_order.append(bottom_bread)
-                number_elements_list[0] += 1
-            if event.key == pygame.K_d:
-                print("Pressed: d")
-                meat = food_element(350, -70, "meat")
-                object_order.append(meat)
-                number_elements_list[1] += 1
-            if event.key == pygame.K_s:
-                print("Pressed: s")
-                lettuce = food_element(350, -70, "lettuce")
-                object_order.append(lettuce)
-                number_elements_list[2] += 1
-            if event.key == pygame.K_k:
-                print("Pressed: k")
-                tomato = food_element(350, -70, "tomato")
-                object_order.append(tomato)
-                number_elements_list[3] += 1
-            if event.key == pygame.K_j:
-                print("Pressed: j")
-                top_bread = food_element(350, -70, "top_bread")
-                object_order.append(top_bread)
-                number_elements_list[4] += 1
-            if event.key == pygame.K_SPACE:
-                print("Pressed: SPACE")
-                #Deliver order
-                # Start the timer
-                if start_time == 0:
-                    start_time = pygame.time.get_ticks()
+            pygame.quit()
+            quit()
+
+    # Refresh and draw the menu screen
+    menu.draw()
+
+    # Refresh the screen
+    pygame.display.update()
+
+    # fps.tick(30)
+
+    # screen.fill((0,0,0))
+    # screen.blit(background_image, (0,0))
+
+    # if requested_order == None:
+    #     requested_order = create_order()
+
+    # # Show the requested order message
+    # order_text = show_order(requested_order)
+    # lines = order_text.split('\n')
+    # y = 20  # Initial y position
+
+    # for line in lines:
+    #     text_surface = order_font.render(line, True, (0, 0, 0))
+    #     screen.blit(text_surface, (900, y))  # Adjust the position of the text
+    #     y += 30  # Ajust the spaces between lines
+
+    # #Draw angry bar
+    # angry_bar.draw(screen)
+
+    # for event in pygame.event.get():
+    #     # Quit the game
+    #     if event.type == pygame.QUIT:
+    #         running = False
+
+    #     menu.handle_event(event)
+
+
+    #     if event.type == pygame.KEYDOWN:
+    #         #This checks if the key pressed is the left arrow
+    #         if event.key == pygame.K_f:
+    #             print("Pressed: f")
+    #             bottom_bread = food_element(490, -70, "bottom_bread")
+    #             object_order.append(bottom_bread)
+    #             number_elements_list[0] += 1
+    #         if event.key == pygame.K_d:
+    #             print("Pressed: d")
+    #             meat = food_element(490, -70, "meat")
+    #             object_order.append(meat)
+    #             number_elements_list[1] += 1
+    #         if event.key == pygame.K_s:
+    #             print("Pressed: s")
+    #             lettuce = food_element(490, -70, "lettuce")
+    #             object_order.append(lettuce)
+    #             number_elements_list[2] += 1
+    #         if event.key == pygame.K_k:
+    #             print("Pressed: k")
+    #             tomato = food_element(490, -70, "tomato")
+    #             object_order.append(tomato)
+    #             number_elements_list[3] += 1
+    #         if event.key == pygame.K_j:
+    #             print("Pressed: j")
+    #             top_bread = food_element(490, -70, "top_bread")
+    #             object_order.append(top_bread)
+    #             number_elements_list[4] += 1
+    #         if event.key == pygame.K_SPACE:
+    #             print("Pressed: SPACE")
+    #             #Deliver order
+    #             # Start the timer
+    #             if start_time == 0:
+    #                 start_time = pygame.time.get_ticks()
                     
-                print(number_elements_list)
-                if requested_order == number_elements_list:
-                        message = show_order_delivered_message(True)
-                        if angry_bar.angriness >=10:
-                            angry_bar.angriness += -10     
-                else:
-                        message = show_order_delivered_message(False)
-                        angry_bar.angriness += 10
-                show_message = True
-                requested_order = None
-                object_order = []
-                number_elements_list = [0,0,0,0,0]
+    #             print(number_elements_list)
+    #             if requested_order == number_elements_list:
+    #                     message = show_order_delivered_message(True)
+    #                     if angry_bar.angriness >=10:
+    #                         angry_bar.angriness += -10     
+    #             else:
+    #                     message = show_order_delivered_message(False)
+    #                     if angry_bar.angriness < 100:
+    #                         angry_bar.angriness += 10
+    #             show_message = True
+    #             requested_order = None
+    #             object_order = []
+    #             number_elements_list = [0,0,0,0,0]
+    # #Game over
+    # if angry_bar.angriness == 100:
+    #     game_over_text()
 
-    # Show the message for 2 seconds
-    # Show the message for a specified duration
-    if show_message:
-        #Subtract to the current time the time when the spacebar was pressed
-        elapsed_time = pygame.time.get_ticks() - start_time
-        screen.blit(message, (10, 70))
-        #Check if the time is higher than the message display time specified
-        if elapsed_time >= message_display_time:
-            show_message = False
-            start_time = 0  # Reset the start time
-            elapsed_time = 0  # Reset the elapsed time
+    # # Show the message for 2 seconds
+    # # Show the message for a specified duration
+    # if show_message:
+    #     #Subtract to the current time the time when the spacebar was pressed
+    #     elapsed_time = pygame.time.get_ticks() - start_time
+    #     screen.blit(message, (10, 70))
+    #     #Check if the time is higher than the message display time specified
+    #     if elapsed_time >= message_display_time:
+    #         show_message = False
+    #         start_time = 0  # Reset the start time
+    #         elapsed_time = 0  # Reset the elapsed time
 
-    #NOTE: IDK I used this formula to solve the speed problem
-    num_objects = len(object_order)
-    speed = base_speed * num_objects
+    # #NOTE: IDK I used this formula to solve the speed problem
+    # # num_objects = len(object_order)
+    # speed = 4
 
-    for i in range(len(object_order)):
-        object_order[i].draw()
-        if i == 0:        
-            if object_order[i].yPosition < 500:
-                object_order[i].yPosition += speed
-        else:
-            if not isCollision(object_order[i].xPosition, object_order[i].yPosition, object_order[i - 1].xPosition, object_order[i - 1].yPosition):
-                object_order[i].yPosition += speed
+    # for i in range(len(object_order)):
+    #     object_order[i].draw()
+    #     if i == 0:        
+    #         if object_order[i].yPosition < 550:
+    #             object_order[i].yPosition += speed
+    #     else:
+    #         if not isCollision(object_order[i].xPosition, object_order[i].yPosition, object_order[i - 1].xPosition, object_order[i - 1].yPosition):
+    #             object_order[i].yPosition += speed
 
-    #Update the display
-    pygame.display.update() 
+    # #Update the display
+
+    # # Actualizar y dibujar la pantalla de inicio
+    # pygame.display.update() 

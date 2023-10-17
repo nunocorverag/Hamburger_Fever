@@ -216,23 +216,18 @@ while running:
                     draw_menu = False
                     start_game = False
                     draw_game_over = True
-                if event.key == pygame.K_f:
-                    print("Pressed: f")
-                    bottom_bread = food_element(444, -70, "Under-bun")
-                    object_order.append(bottom_bread)
-                    number_elements_list[0] += 1
                 if event.key == pygame.K_d:
                     print("Pressed: d")
                     meat = food_element(460, -70, "Meat")
                     object_order.append(meat)
                     number_elements_list[1] += 1
-                if event.key == pygame.K_s:
+                if event.key == pygame.K_f:
                     print("Pressed: s")
                     lettuce = food_element(456, -70, "Lettuce")
                     object_order.append(lettuce)
                     object_order[-1].height = 10
                     number_elements_list[2] += 1
-                if event.key == pygame.K_k:
+                if event.key == pygame.K_j:
                     print("Pressed: k")
                     tomato = food_element(480, -70, "Tomatoe")
                     object_order.append(tomato)

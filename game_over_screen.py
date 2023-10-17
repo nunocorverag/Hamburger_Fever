@@ -26,6 +26,9 @@ def title_text(screen):
 
 class OverScreen:
 
+    def __init__(self, screen):
+        self.screen = screen
+
     # Verify if continue button was clicked
     def check_continue_click(mouse_pos):
         continue_button_rect = continue_button_image.get_rect(topleft=(150, 600))
@@ -40,8 +43,46 @@ class OverScreen:
             return True
         return False
     
-    def __init__(self, screen):
-        self.screen = screen
+    #This function is in testing
+    def get_user_name(self):
+        input_box = pygame.Rect(540, 300, 140, 32)
+        color_inactive = pygame.Color('lightskyblue3')
+        color_active = pygame.Color('dodgerblue2')
+        color = color_inactive
+        active = False
+        text = ''
+        done = False
+
+        while not done:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if input_box.collidepoint(event.pos):
+                        active = not active
+                    else:
+                        active = False
+                    color = color_active if active else color_inactive
+                if event.type == pygame.KEYDOWN:
+                    if active:
+                        if event.key == pygame.K_RETURN:
+                            done = True
+                        elif event.key == pygame.K_BACKSPACE:
+                            text = text[:-1]
+                        else:
+                            text += event.unicode
+
+            self.screen.fill((30, 30, 30))
+            font = pygame.font.Font(None, 32)
+            txt_surface = font.render(text, True, color)
+            width = max(200, txt_surface.get_width() + 10)
+            input_box.w = width
+            self.screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+            pygame.draw.rect(self.screen, color, input_box, 2)
+            pygame.display.flip()
+
+        return text
 
     def draw(self):
         self.screen.blit(background_menu_image, (0,0))

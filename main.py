@@ -335,6 +335,9 @@ while running:
             object_order[i].draw()
 
     if draw_game_over:
+        user_name = game_over.get_user_name()
+        if user_name:
+            print("User name: ", user_name)
         game_over.draw()
 
 

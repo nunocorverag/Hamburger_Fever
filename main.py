@@ -39,6 +39,8 @@ delivered_font = pygame.font.Font("freesansbold.ttf", 20)
 over_font = pygame.font.Font("freesansbold.ttf", 64)
 
 #deliver order
+deliver_order = False
+
 object_order = []
 
 #This array will get the number of each element
@@ -57,9 +59,13 @@ show_message = False
 
 ##daclare acceleration (gravity)
 gravity = 2
+accx = 3
 
 ## How much the object will bounce in a collision, must be a balue between 0 and 1
 rebote = 0.5
+
+##States if the player may have input or not
+gamestate = 0
 
 #Initialize requested order variable
 requested_order = None
@@ -86,6 +92,7 @@ class food_element():
         self.food_name = food_name
         self.image = None
         self.spdy = 0
+        self.spdx = 0
         self.move = True
         self.calculo_rebote = 0
     
@@ -151,7 +158,6 @@ def show_order(requested_order):
 
 #create customer order
 def create_order():
-
     bottom_bread_num = 1
     meat_num = random.randint(1,3)
     lettuce_num = random.randint(0,3)
@@ -166,7 +172,6 @@ def game_over_text():
     screen.blit(over_text, (200, 250))
 
 def check_collisions(i):
-    object_order[i].yPosition += object_order[i].spdy
 
     if isCollision(object_order[i].yPosition, object_order[i - 1].yPosition,i):
         object_order[i].calculo_rebote = -(abs(object_order[i].spdy) * rebote)
@@ -176,31 +181,15 @@ def check_collisions(i):
             object_order[i].yPosition += object_order[i].spdy
         else:
             object_order[i].spdy = 0
+
             if object_order[i-1].move == False:
                 object_order[i].move = False
 
     while isCollision(object_order[i].yPosition, object_order[i - 1].yPosition,i):
         object_order[i].yPosition -= 1
 
-def score_to_get(order_quantity_list):
-    score_to_get = 0
-    for quantity in order_quantity_list:
-        score_to_get += quantity
-    return score_to_get
-  
-def restart_game():
-    # Restarting the global variables
-    global object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, gravity, requested_order, score_value, angry_bar
-    object_order = []
-    number_elements_list = [0,0,0,0,0]
-    start_time = 0
-    elapsed_time = 0
-    message_display_time = 2000
-    show_message = False
-    gravity = 2
-    requested_order = None
-    score_value = 0
-    angry_bar = AngryBar(10, 10, 300, 40, 100)
+def slide():
+    return
 
 fps = pygame.time.Clock()
 
@@ -211,27 +200,16 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        if draw_menu:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                if MenuScreen.check_exit_click(mouse_pos):
-                    running = False
-                if MenuScreen.check_start_click(mouse_pos):
-                    draw_menu = False
-                    start_game = True
-                    print("Starting game...")
-
-        if draw_game_over:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                if OverScreen.check_continue_click(mouse_pos):
-                    draw_menu = True
-                    draw_game_over = False
-                    restart_game()
-                if OverScreen.check_high_score_click(mouse_pos):
-                    a = 0
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = pygame.mouse.get_pos()
+            if MenuScreen.check_exit_click(mouse_pos):
+                running = False
+            if MenuScreen.check_start_click(mouse_pos):
+                draw_menu = False
+                start_game = True
+                print("Starting game...")
         if start_game:
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN and gamestate == 1:
                 #This checks if the key pressed is the left arrow
                 if event.key == pygame.K_f:
                     print("Pressed: f")
@@ -253,31 +231,30 @@ while running:
                     tomato = food_element(480, -70, "Tomatoe")
                     object_order.append(tomato)
                     number_elements_list[3] += 1
-                if event.key == pygame.K_j:
-                    print("Pressed: j")
-                    top_bread = food_element(444, -70, "Top_bun")
-                    object_order.append(top_bread)
-                    number_elements_list[4] += 1
                 if event.key == pygame.K_SPACE:
                     print("Pressed: SPACE")
+                    ##user wont be able to input afterwards
+                    gamestate = 2
                     #Deliver order
                     # Start the timer
+                    top_bread = food_element(444, -70, "Top_bun")
+                    object_order.append(top_bread)
+
                     if start_time == 0:
                         start_time = pygame.time.get_ticks()
                         
                     print(number_elements_list)
                     if requested_order == number_elements_list:
                             message = show_order_delivered_message(True)
-                            score_value += score_to_get(requested_order)
                             if angry_bar.angriness >=10:
-                                angry_bar.angriness += -10
+                                angry_bar.angriness += -10     
                     else:
                             message = show_order_delivered_message(False)
                             if angry_bar.angriness < 100:
                                 angry_bar.angriness += 10
                     show_message = True
                     requested_order = None
-                    object_order = []
+                    ##object_order = []
                     number_elements_list = [0,0,0,0,0]
 
     # Refresh and draw the menu screen
@@ -286,7 +263,7 @@ while running:
 
     if start_game:
         fps.tick(30)
-        print(fps.get_fps())
+        ##print(fps.get_fps()) ##only use if you want the fps to be printed
 
         screen.fill((0,0,0))
         screen.blit(background_image, (0,0))
@@ -327,18 +304,37 @@ while running:
                 elapsed_time = 0  # Reset the elapsed time
 
         for i in range(len(object_order)):
-            object_order[i].spdy += gravity
 
-            if object_order[i].move == True:
+            if gamestate == 3:
+                object_order[i].spdx += accx
+
+            object_order[i].spdy += gravity
+            object_order[i].xPosition += object_order[i].spdx
+
+            if object_order[i].move == True or i == 0:
+                object_order[i].yPosition += object_order[i].spdy
                 check_collisions(i)
 
             object_order[i].draw()
 
+        if len(object_order):
+            print(object_order[-1].move)
+
+            if object_order[-1].move == False and gamestate == 2:
+                gamestate = 3
+
+            if  object_order[0].xPosition > 1200 and gamestate == 3:
+                print('ok')
+                object_order = []
+        else: 
+            bottom_bread = food_element(444, -70, "Under-bun")
+            object_order.append(bottom_bread)
+            object_order[0].move = False
+            gamestate = 1
+
     if draw_game_over:
-        user_name = game_over.get_user_name()
-        if user_name:
-            print("User name: ", user_name)
-        game_over.draw()
+        ##over.draw
+        None
 
 
     # Refresh the screen

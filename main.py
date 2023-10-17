@@ -6,6 +6,7 @@ from pygame import mixer
 
 #Import the menu screen
 from menu_screen import MenuScreen
+from game_over_screen import OverScreen
 
 #Initialize the game
 pygame.init()
@@ -16,6 +17,9 @@ pygame.display.set_caption("Pantalla de Inicio")
 
 #Menu screen object
 menu = MenuScreen(screen)
+
+#Over screen object
+game_over = OverScreen(screen)
 
 #Background
 background_image = pygame.image.load("images/background.jpg")
@@ -68,6 +72,15 @@ draw_menu = True
 #Determine if the game is started
 start_game = False
 
+#Determine if the game has finished
+draw_game_over = False
+
+#Score
+score_value = 0
+score_font  = pygame.font.Font("freesansbold.ttf", 32)
+scoreX = 500
+scoreY = 10
+
 class food_element():
     def __init__(self, x, y, food_name):
         self.xPosition = x
@@ -99,6 +112,10 @@ class AngryBar():
 
 #Create an angry bar object
 angry_bar = AngryBar(10, 10, 300, 40, 100)
+
+def show_score(x, y):
+    score_text = score_font.render("Score : " + str(score_value), True, (102,0,204))
+    screen.blit(score_text, (x, y))
 
 def isCollision(object2_y,object1_y,i):
     # Distance between two points D = sqrt*(x2 - x1)^2 + (y2 - y1)^2)
@@ -243,6 +260,8 @@ while running:
         screen.fill((0,0,0))
         screen.blit(background_image, (0,0))
 
+        show_score(scoreX, scoreY)
+
         if requested_order == None:
             requested_order = create_order()
 
@@ -261,7 +280,8 @@ while running:
 
         #Game over
         if angry_bar.angriness == 100:
-            game_over_text()
+            start_game = False
+            draw_game_over = True
 
         # Show the message for 2 seconds
         # Show the message for a specified duration
@@ -282,8 +302,10 @@ while running:
                 check_collisions(i)
 
             object_order[i].draw()
-                        
-                
+
+    if draw_game_over:
+        over.draw
+
 
     # Refresh the screen
     pygame.display.update()

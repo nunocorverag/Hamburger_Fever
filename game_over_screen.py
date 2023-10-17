@@ -3,8 +3,8 @@ import pygame
 pygame.init()
 
 #Background
-background_over_image = pygame.image.load("images/menu_screen_background.png")
-background_menu_image = pygame.transform.scale(background_over_image, (1080, 720))
+background_menu_image = pygame.image.load("images/game_over_image.png")
+background_menu_image = pygame.transform.scale(background_menu_image, (1080, 720))
 
 #Start
 start_button_image = pygame.image.load("images/buttons/start_btn.jpeg")
@@ -26,17 +26,17 @@ def title_text(screen):
     title_text = title_font.render("Hamburger Fever", True, (255,255,255))
     screen.blit(title_text, (250, 150))
 
-class MenuScreen:
+class OverScreen:
 
     # Función para verificar si se hizo clic en el botón de inicio
-    def check_start_click(mouse_pos):
+    def check_continue_click(mouse_pos):
         start_button_rect = start_button_image.get_rect(topleft=(210, 450))
         if start_button_rect.collidepoint(mouse_pos):
             return True
         return False
 
     # Función para verificar si se hizo clic en el botón de salida
-    def check_exit_click(mouse_pos):
+    def check_high_score(mouse_pos):
         exit_button_rect = exit_button_image.get_rect(topleft=(610, 450))
         if exit_button_rect.collidepoint(mouse_pos):
             return True

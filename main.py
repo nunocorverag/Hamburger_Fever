@@ -95,6 +95,7 @@ class food_element():
         self.spdx = 0
         self.move = True
         self.calculo_rebote = 0
+        self.height = 20
     
     def draw(self):
         self.image = pygame.image.load("images/food/Final_Sprites/" + self.food_name + ".png").convert_alpha()
@@ -127,7 +128,7 @@ def isCollision(object2_y,object1_y,i):
     if i == 0:
         if object_order[i].yPosition > 550:
             return True
-    elif object1_y - 30 < object2_y:
+    elif object1_y - object_order[i-1].height / 2 < object2_y + object_order[i].height:
         return True
     else: return False
 
@@ -229,11 +230,13 @@ while running:
                     print("Pressed: s")
                     lettuce = food_element(456, -70, "Lettuce")
                     object_order.append(lettuce)
+                    object_order[-1].height = 10
                     number_elements_list[2] += 1
                 if event.key == pygame.K_k:
                     print("Pressed: k")
                     tomato = food_element(480, -70, "Tomatoe")
                     object_order.append(tomato)
+                    object_order[-1].height = 3
                     number_elements_list[3] += 1
                 if event.key == pygame.K_SPACE:
                     print("Pressed: SPACE")
@@ -243,6 +246,7 @@ while running:
                     # Start the timer
                     top_bread = food_element(444, -70, "Top_bun")
                     object_order.append(top_bread)
+                    object_order[-1].height = 60
 
                     if start_time == 0:
                         start_time = pygame.time.get_ticks()

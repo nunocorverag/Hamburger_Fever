@@ -1,6 +1,8 @@
 import pygame
 import random
 
+import json
+
 #Handle music in the game
 from pygame import mixer
 
@@ -375,14 +377,50 @@ while running:
                 print("User name: ", user_name)
                 input_name = False
                 draw_game_over = True
-                text_to_file = f"{user_name} ==> {score_value}"
-                print(text_to_file)
-                #The appendix mode "a", Adds text at the end of the file
-                archivo = open("Hamburger_Fever_Scores.txt", "a")
-                archivo.write(text_to_file + "\n")
-                archivo.close()
+
+                try:
+                    #with guarantees that the resources are released at the end of the code block
+                    #So here we are opening a file and creating a hanlde named archivo. At the end of the execution of the 
+                    #with, it will close
+                    with open("Hamburger_Fever_Scores.txt", "r") as archivo:
+                        #Here we store the lines of the file in an array
+                        data = archivo.readlines()
+
+                        #We create the dictionary of scores
+                        scores_dict = {}
+                        
+                        #We are going to iterate for each line in data
+                        for line in data:
+                            #Here, we get the original JSON chain (which is a dictionary and save it in store_data -> It will be a dictionary)
+                            score_data = json.loads(line)
+                            #Update the dictionary with the key-value pair from score_data dictionary
+                            scores_dict.update(score_data)
+                            
+                #If there is no file, we create a new dictionary
+                except FileNotFoundError:
+                    scores_dict = {}
+
+                # Verify if the username is alredy in the dictionary and update if it is necesary
+                if user_name in scores_dict:
+                    #If the current score is greater than the dictionary score, we update it
+                    if score_value > scores_dict[user_name]:
+                        scores_dict[user_name] = score_value
+                #If there is no registered  name, we store the score in a new key
+                else:
+                    scores_dict[user_name] = score_value
+
+                #Convert the scores dictionary to a string in JSON format. (To store data in json format and then be able to recover it when a user name is entered)
+                text_to_file = json.dumps(scores_dict)
+
+                #Write the names and scores into the 'Hamburger_Fever_Scores.txt' file
+                with open("Hamburger_Fever_Scores.txt", "w") as archivo:
+                    archivo.write(text_to_file + "\n")
+
     if draw_game_over:
         game_over.draw()
+
+    # if draw_high_scores:
+        # high_score.draw()
 
 
     # Refresh the screen

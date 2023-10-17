@@ -211,6 +211,10 @@ while running:
         if start_game:
             if event.type == pygame.KEYDOWN and gamestate == 1:
                 #This checks if the key pressed is the left arrow
+                if event.key == pygame.K_r:
+                    draw_menu = False
+                    start_game = False
+                    draw_game_over = True
                 if event.key == pygame.K_f:
                     print("Pressed: f")
                     bottom_bread = food_element(444, -70, "Under-bun")
@@ -331,10 +335,12 @@ while running:
             object_order.append(bottom_bread)
             object_order[0].move = False
             gamestate = 1
-
+            
     if draw_game_over:
-        ##over.draw
-        None
+        user_name = game_over.get_user_name()
+        if user_name:
+            print("User name: ", user_name)
+        game_over.draw()
 
 
     # Refresh the screen

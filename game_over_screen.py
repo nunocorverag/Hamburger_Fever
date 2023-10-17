@@ -43,42 +43,44 @@ class OverScreen:
             return True
         return False
     
-    #This function is in testing
+    # This function is in testing
     def get_user_name(self):
-        input_box = pygame.Rect(540, 300, 140, 32)
+        # Define the initial position for the input box
+        input_box_width = 140
+        input_box_x = (1080 - input_box_width) // 2
+        input_box = pygame.Rect(input_box_x, 300, input_box_width, 32)
+
         # Create the Enter button
-        enter_button = pygame.Rect(540, 350, 140, 32)
-        #Create the colors of the input box when it is active and unactive
+        enter_button = pygame.Rect(440, 350, 200, 32)  # Adjusted position and size of the button
+        # Create the colors of the input box when it is active and inactive
         color_inactive = pygame.Color('lightskyblue3')
         color_active = pygame.Color('dodgerblue2')
 
-        #Set default color as inactive
+        # Set default color as inactive
         color = color_inactive
 
-        #Set active attribute for the textbox in false
+        # Set active attribute for the textbox to false
         active = False
 
-        #Set the default text empty
+        # Set the default text to empty
         text = ''
 
-        #Wehn this variable is true, the while loop will end
+        # When this variable is true, the while loop will end
         done = False
 
         # Maximum number of allowed letters
-        max_letters = 3  
+        max_letters = 3
 
         while not done:
-            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
 
-                #If the mouse button collides with the input box, active it
+                # If the mouse button collides with the input box, activate it
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if input_box.collidepoint(event.pos):
                         active = not active
-                        # Check if 'Enter' button is clicked and text is not empty
                     elif enter_button.collidepoint(event.pos) and len(text) > 0:
                         done = True
                     else:
@@ -86,38 +88,38 @@ class OverScreen:
                     color = color_active if active else color_inactive
                 if event.type == pygame.KEYDOWN:
                     if active:
-                        #If the input box is active, when backspace is clicked, delete one letter from the text string
                         if event.key == pygame.K_BACKSPACE:
                             text = text[:-1]
                         else:
-                            # Check the maximum letters and add a letter if the string is no longer than 3
                             if len(text) < max_letters:
                                 text += event.unicode
-            
-            #Fill the screen with a color
+
             self.screen.fill((30, 30, 30))
 
-            #Show the text that request the user to input it's name
-            name_text(self.screen)
+            # Adjust the position of the input box to center it on the screen
+            input_box.x = (1080 - input_box_width) // 2
 
-            #Set the font and size it to 32
+            name_text(self.screen)
 
             font = pygame.font.Font(None, 32)
 
-            #Show the text in the input box
             txt_surface = font.render(text, True, color)
-            input_box.w = 200
+
+            # Adjusted the position to center the text in the input box
             self.screen.blit(txt_surface, ((1080 - txt_surface.get_width()) // 2, input_box.y + 5))
 
-            #Rect(screen, color, position and size, border thickness)
-            #Draw the input box
+            # Draw the input box
             pygame.draw.rect(self.screen, color, input_box, 2)
 
             # Draw Enter button
-            pygame.draw.rect(self.screen, color_inactive, enter_button, 2)  
+            pygame.draw.rect(self.screen, color_inactive, enter_button, 2)
+
             font_enter = pygame.font.Font(None, 32)
             text_enter = font_enter.render("Enter", True, (255, 255, 255))
-            self.screen.blit(text_enter, (enter_button.x + 10, enter_button.y + 5))  # Position the 'Enter' button text
+
+            # Adjust the position to center the text in the button
+            text_enter_rect = text_enter.get_rect(center=enter_button.center)
+            self.screen.blit(text_enter, text_enter_rect.topleft)
 
             pygame.display.flip()
 

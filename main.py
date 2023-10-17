@@ -76,6 +76,9 @@ draw_menu = True
 #Determine if the game is started
 start_game = False
 
+#Request the user to input name
+input_name = False
+
 #Determine if the game has finished
 draw_game_over = False
 
@@ -215,7 +218,8 @@ while running:
                 if event.key == pygame.K_r:
                     draw_menu = False
                     start_game = False
-                    draw_game_over = True
+                    draw_game_over = False
+                    input_name = True
                 if event.key == pygame.K_d:
                     print("Pressed: d")
                     meat = food_element(460, -70, "Meat")
@@ -335,10 +339,18 @@ while running:
             object_order[0].move = False
             gamestate = 1
             
+    if input_name:
+            user_name = game_over.get_user_name(score_value)
+            if user_name:
+                print("User name: ", user_name)
+                input_name = False
+                draw_game_over = True
+                text_to_file = f"{user_name} ==> {score_value}"
+                print(text_to_file)
+                archivo = open("Hamburger_Fever_Scores.txt", "w")
+                archivo.write(text_to_file)
+                archivo.close()
     if draw_game_over:
-        user_name = game_over.get_user_name()
-        if user_name:
-            print("User name: ", user_name)
         game_over.draw()
 
 

@@ -28,6 +28,9 @@ def title_text(screen):
 
 class MenuScreen:
 
+    def __init__(self, screen):
+        self.screen = screen
+        
     # Verify if start button was clicked
     def check_start_click(mouse_pos):
         start_button_rect = start_button_image.get_rect(topleft=(210, 450))
@@ -41,9 +44,6 @@ class MenuScreen:
         if exit_button_rect.collidepoint(mouse_pos):
             return True
         return False
-    
-    def __init__(self, screen):
-        self.screen = screen
 
     def draw(self):
         self.screen.blit(background_menu_image, (0,0))

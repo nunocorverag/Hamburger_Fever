@@ -44,7 +44,7 @@ class OverScreen:
         return False
     
     # This function is in testing
-    def get_user_name(self):
+    def get_user_name(self, score):
         # Define the initial position for the input box
         input_box_width = 140
         input_box_x = (1080 - input_box_width) // 2
@@ -88,6 +88,8 @@ class OverScreen:
                     color = color_active if active else color_inactive
                 if event.type == pygame.KEYDOWN:
                     if active:
+                        if event.key == pygame.K_RETURN and len(text) > 0:
+                            done = True
                         if event.key == pygame.K_BACKSPACE:
                             text = text[:-1]
                         else:
@@ -100,6 +102,11 @@ class OverScreen:
             input_box.x = (1080 - input_box_width) // 2
 
             name_text(self.screen)
+
+            # Show user score
+            score_text = score_font.render("Your score: " + str(score), True, (255, 255, 255))
+            score_text_rect = score_text.get_rect(center=(1080 // 2, 250))
+            self.screen.blit(score_text, score_text_rect.topleft)
 
             font = pygame.font.Font(None, 32)
 
@@ -121,7 +128,7 @@ class OverScreen:
             text_enter_rect = text_enter.get_rect(center=enter_button.center)
             self.screen.blit(text_enter, text_enter_rect.topleft)
 
-            pygame.display.flip()
+            pygame.display.update()
 
         return text
 

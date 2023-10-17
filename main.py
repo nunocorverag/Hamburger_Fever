@@ -39,8 +39,6 @@ delivered_font = pygame.font.Font("freesansbold.ttf", 20)
 over_font = pygame.font.Font("freesansbold.ttf", 64)
 
 #deliver order
-deliver_order = False
-
 object_order = []
 
 #This array will get the number of each element
@@ -153,6 +151,7 @@ def show_order(requested_order):
 
 #create customer order
 def create_order():
+
     bottom_bread_num = 1
     meat_num = random.randint(1,3)
     lettuce_num = random.randint(0,3)
@@ -183,6 +182,26 @@ def check_collisions(i):
     while isCollision(object_order[i].yPosition, object_order[i - 1].yPosition,i):
         object_order[i].yPosition -= 1
 
+def score_to_get(order_quantity_list):
+    score_to_get = 0
+    for quantity in order_quantity_list:
+        score_to_get += quantity
+    return score_to_get
+  
+def restart_game():
+    # Restarting the global variables
+    global object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, gravity, requested_order, score_value, angry_bar
+    object_order = []
+    number_elements_list = [0,0,0,0,0]
+    start_time = 0
+    elapsed_time = 0
+    message_display_time = 2000
+    show_message = False
+    gravity = 2
+    requested_order = None
+    score_value = 0
+    angry_bar = AngryBar(10, 10, 300, 40, 100)
+
 fps = pygame.time.Clock()
 
 running = True
@@ -192,14 +211,25 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_pos = pygame.mouse.get_pos()
-            if MenuScreen.check_exit_click(mouse_pos):
-                running = False
-            if MenuScreen.check_start_click(mouse_pos):
-                draw_menu = False
-                start_game = True
-                print("Starting game...")
+        if draw_menu:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if MenuScreen.check_exit_click(mouse_pos):
+                    running = False
+                if MenuScreen.check_start_click(mouse_pos):
+                    draw_menu = False
+                    start_game = True
+                    print("Starting game...")
+
+        if draw_game_over:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if OverScreen.check_continue_click(mouse_pos):
+                    draw_menu = True
+                    draw_game_over = False
+                    restart_game()
+                if OverScreen.check_high_score_click(mouse_pos):
+                    a = 0
         if start_game:
             if event.type == pygame.KEYDOWN:
                 #This checks if the key pressed is the left arrow
@@ -238,8 +268,9 @@ while running:
                     print(number_elements_list)
                     if requested_order == number_elements_list:
                             message = show_order_delivered_message(True)
+                            score_value += score_to_get(requested_order)
                             if angry_bar.angriness >=10:
-                                angry_bar.angriness += -10     
+                                angry_bar.angriness += -10
                     else:
                             message = show_order_delivered_message(False)
                             if angry_bar.angriness < 100:
@@ -304,7 +335,7 @@ while running:
             object_order[i].draw()
 
     if draw_game_over:
-        over.draw
+        game_over.draw()
 
 
     # Refresh the screen

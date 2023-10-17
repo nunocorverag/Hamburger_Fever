@@ -28,14 +28,14 @@ def title_text(screen):
 
 class MenuScreen:
 
-    # Función para verificar si se hizo clic en el botón de inicio
+    # Verify if start button was clicked
     def check_start_click(mouse_pos):
         start_button_rect = start_button_image.get_rect(topleft=(210, 450))
         if start_button_rect.collidepoint(mouse_pos):
             return True
         return False
 
-    # Función para verificar si se hizo clic en el botón de salida
+    # Verify if exit button was clicked
     def check_exit_click(mouse_pos):
         exit_button_rect = exit_button_image.get_rect(topleft=(610, 450))
         if exit_button_rect.collidepoint(mouse_pos):

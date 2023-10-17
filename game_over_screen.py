@@ -3,42 +3,40 @@ import pygame
 pygame.init()
 
 #Background
-background_menu_image = pygame.image.load("images/game_over_image.png")
+background_menu_image = pygame.image.load("images/game_over_image.jpg")
 background_menu_image = pygame.transform.scale(background_menu_image, (1080, 720))
 
-#Start
-start_button_image = pygame.image.load("images/buttons/start_btn.jpeg")
+#Continue
+continue_button_image = pygame.image.load("images/buttons/continue_btn.png")
+continue_button_image = pygame.transform.scale(continue_button_image, (350, 100))
 
-#Exit
-exit_button_image = pygame.image.load("images/buttons/exit_btn.jpeg")
+#High Score
+high_score_button_image = pygame.image.load("images/buttons/high_score_btn.png")
+high_score_button_image = pygame.transform.scale(high_score_button_image, (350, 100))
 
 #Title font
 title_font = pygame.font.Font("freesansbold.ttf", 64)
-
-#Hamburger image
-hamburger_image = pygame.image.load("images/food/hamburger.png")
-hamburger_image = pygame.transform.scale(hamburger_image, (200, 200))
 
 # Font configuration
 font = pygame.font.Font("freesansbold.ttf", 36)
 
 def title_text(screen):
-    title_text = title_font.render("Hamburger Fever", True, (255,255,255))
-    screen.blit(title_text, (250, 150))
+    title_text = title_font.render("Game Over", True, (0,0,0))
+    screen.blit(title_text, (360, 100))
 
 class OverScreen:
 
-    # Función para verificar si se hizo clic en el botón de inicio
+    # Verify if continue button was clicked
     def check_continue_click(mouse_pos):
-        start_button_rect = start_button_image.get_rect(topleft=(210, 450))
-        if start_button_rect.collidepoint(mouse_pos):
+        continue_button_rect = continue_button_image.get_rect(topleft=(150, 600))
+        if continue_button_rect.collidepoint(mouse_pos):
             return True
         return False
 
-    # Función para verificar si se hizo clic en el botón de salida
-    def check_high_score(mouse_pos):
-        exit_button_rect = exit_button_image.get_rect(topleft=(610, 450))
-        if exit_button_rect.collidepoint(mouse_pos):
+    # Verify if high score button was clicked
+    def check_high_score_click(mouse_pos):
+        high_score_button_rect = high_score_button_image.get_rect(topleft=(550, 600))
+        if high_score_button_rect.collidepoint(mouse_pos):
             return True
         return False
     
@@ -47,7 +45,6 @@ class OverScreen:
 
     def draw(self):
         self.screen.blit(background_menu_image, (0,0))
-        self.screen.blit(hamburger_image, (440,220))
         title_text(self.screen)
-        self.screen.blit(start_button_image, (210,450))
-        self.screen.blit(exit_button_image, (610,450))
+        self.screen.blit(continue_button_image, (150,600))
+        self.screen.blit(high_score_button_image, (550,600))

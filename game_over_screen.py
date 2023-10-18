@@ -31,14 +31,14 @@ class OverScreen:
 
     # Verify if continue button was clicked
     def check_continue_click(mouse_pos):
-        continue_button_rect = continue_button_image.get_rect(topleft=(150, 600))
+        continue_button_rect = continue_button_image.get_rect(topleft=(150, 65))
         if continue_button_rect.collidepoint(mouse_pos):
             return True
         return False
 
     # Verify if high score button was clicked
     def check_high_score_click(mouse_pos):
-        high_score_button_rect = high_score_button_image.get_rect(topleft=(550, 600))
+        high_score_button_rect = high_score_button_image.get_rect(topleft=(550, 65))
         if high_score_button_rect.collidepoint(mouse_pos):
             return True
         return False
@@ -134,5 +134,5 @@ class OverScreen:
 
     def draw(self):
         self.screen.blit(background_menu_image, (0,0))
-        self.screen.blit(continue_button_image, (150,600))
-        self.screen.blit(high_score_button_image, (550,600))
+        self.screen.blit(continue_button_image, (150,65))
+        self.screen.blit(high_score_button_image, (550,65))

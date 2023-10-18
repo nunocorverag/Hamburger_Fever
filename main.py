@@ -260,7 +260,7 @@ while running:
                         draw_high_scores = False
                         restart_game()
         if start_game:
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and gamestate == 1:
                 mouse_pos = pygame.mouse.get_pos()
                 #Botones de visualización y funcionalidad
                 if meat_button.check_clicked_button(mouse_pos):
@@ -283,20 +283,12 @@ while running:
                     object_order[-1].height = 3
                     number_elements_list[1] += 1
             if event.type == pygame.KEYDOWN and gamestate == 1:
-                # #Placeholder for input name screen
-                # if event.key == pygame.K_r:
-                #     draw_menu = False
-                #     start_game = False
-                #     draw_game_over = False
-                #     input_name = True
-
-                # #Placeholder for input name screen
-                # if event.key == pygame.K_t:
-                #     draw_menu = False
-                #     start_game = False
-                #     draw_game_over = False
-                #     input_name = False
-                #     draw_high_scores = True
+                #Placeholder for game over screen
+                if event.key == pygame.K_r:
+                    draw_menu = False
+                    start_game = False
+                    draw_game_over = True
+                    input_name = False
 
                 #Detect element
             

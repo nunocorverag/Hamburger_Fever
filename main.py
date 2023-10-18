@@ -9,19 +9,23 @@ from pygame import mixer
 #Import the menu screen
 from menu_screen import MenuScreen
 from game_over_screen import OverScreen
+from highscore_screen import HighScoreScreen
 
 #Initialize the game
 pygame.init()
 
 #Set up the screen dimensions
 screen = pygame.display.set_mode((1080,720))
-pygame.display.set_caption("Pantalla de Inicio")
+pygame.display.set_caption("Hamburguer Fever")
 
 #Menu screen object
 menu = MenuScreen(screen)
 
 #Over screen object
 game_over = OverScreen(screen)
+
+#High Score screen object
+high_score = HighScoreScreen(screen)
 
 #Background
 background_image = pygame.image.load("images/background.jpg")
@@ -249,6 +253,14 @@ while running:
                     draw_game_over = False
                     input_name = True
 
+                #Placeholder for input name screen
+                if event.key == pygame.K_t:
+                    draw_menu = False
+                    start_game = False
+                    draw_game_over = False
+                    input_name = False
+                    draw_high_scores = True
+
                 #Detect element
                 if event.key == pygame.K_f:
                     print("Pressed: s")
@@ -395,7 +407,7 @@ while running:
                             score_data = json.loads(line)
                             #Update the dictionary with the key-value pair from score_data dictionary
                             scores_dict.update(score_data)
-                            
+
                 #If there is no file, we create a new dictionary
                 except FileNotFoundError:
                     scores_dict = {}
@@ -419,8 +431,8 @@ while running:
     if draw_game_over:
         game_over.draw()
 
-    # if draw_high_scores:
-        # high_score.draw()
+    if draw_high_scores:
+        high_score.draw()
 
 
     # Refresh the screen

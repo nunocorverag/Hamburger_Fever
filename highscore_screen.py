@@ -6,8 +6,9 @@ pygame.init()
 background_over_image = pygame.image.load("images/menu_screen_background.png")
 background_menu_image = pygame.transform.scale(background_over_image, (1080, 720))
 
-#Return
-return_button_image = pygame.image.load("images/buttons/start_btn.jpeg")
+#Continue
+continue_button_image = pygame.image.load("images/buttons/continue_btn.png")
+continue_button_image = pygame.transform.scale(continue_button_image, (350, 100))
 
 #Title font
 title_font = pygame.font.Font("freesansbold.ttf", 64)

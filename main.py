@@ -1,6 +1,6 @@
 import pygame
 import random
-
+import botones
 import json
 
 #Handle music in the game
@@ -96,6 +96,16 @@ score_value = 0
 score_font  = pygame.font.Font("freesansbold.ttf", 32)
 scoreX = 500
 scoreY = 10
+
+#Crear variables de imágenes
+meat_img = pygame.image.load("images/buttons/boton_carne.jpg").convert_alpha()
+lech_img = pygame.image.load("images/buttons/boton_lechuga.jpg").convert_alpha()
+toma_img = pygame.image.load("images/buttons/boton_tomate.jpg").convert_alpha()
+
+#Tamaño imágenes - botones comida
+meat_button = botones.button(200, 600, meat_img, 0.2, screen)
+lechu_button = botones.button(400, 600, lech_img, 0.2, screen)
+toma_button = botones.button(600, 600, toma_img, 0.2, screen)
 
 class food_element():
     def __init__(self, x, y, food_name):
@@ -236,7 +246,7 @@ while running:
                     draw_menu = False
                     start_game = True
                     print("Starting game...")
-            if game_over:
+            if draw_game_over:
                 if OverScreen.check_continue_click(mouse_pos):
                     draw_menu = True
                     draw_game_over = False
@@ -250,6 +260,28 @@ while running:
                         draw_high_scores = False
                         restart_game()
         if start_game:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                #Botones de visualización y funcionalidad
+                if meat_button.check_clicked_button(mouse_pos):
+                    print("Pressed: button meat")
+                    meat = food_element(460, -70, "Meat")
+                    object_order.append(meat)
+                    number_elements_list[2] += 1
+
+                if lechu_button.check_clicked_button(mouse_pos):
+                    print("Pressed: button lettuce")
+                    lettuce = food_element(456, -70, "Lettuce")
+                    object_order.append(lettuce)
+                    object_order[-1].height = 10
+                    number_elements_list[0] += 1
+
+                if toma_button.check_clicked_button(mouse_pos):
+                    print("Pressed: button tomatoe")
+                    tomato = food_element(480, -70, "Tomatoe")
+                    object_order.append(tomato)
+                    object_order[-1].height = 3
+                    number_elements_list[1] += 1
             if event.type == pygame.KEYDOWN and gamestate == 1:
                 # #Placeholder for input name screen
                 # if event.key == pygame.K_r:
@@ -267,6 +299,7 @@ while running:
                 #     draw_high_scores = True
 
                 #Detect element
+            
                 if event.key == pygame.K_f:
                     print("Pressed: s")
                     lettuce = food_element(456, -70, "Lettuce")
@@ -325,6 +358,11 @@ while running:
 
         screen.fill((0,0,0))
         screen.blit(background_image, (0,0))
+
+        #Draw buttons
+        meat_button.draw()
+        lechu_button.draw()
+        toma_button.draw()
 
         show_score(scoreX, scoreY)
 

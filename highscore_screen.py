@@ -34,19 +34,25 @@ class HighScoreScreen:
             return True
         return False
     
-    def load_sort_socres(self):
+    def load_sort_scores(self):
         with open("Hamburger_Fever_Scores.txt", "r") as file:
             high_scores = []
             for line in file:
                 score_data = json.loads(line)
                 for key, value in score_data.items():
-                    high_scores.append(((key, value)))
+                    high_scores.append((key, value))
 
-            high_scores.sort(key=lambda x: x[1], reverse=True)
-            return high_scores
+        # Bubble sort
+        n = len(high_scores)
+        for i in range(n - 1):
+            for j in range(0, n - i - 1):
+                if high_scores[j][1] < high_scores[j + 1][1]:
+                    high_scores[j], high_scores[j + 1] = high_scores[j + 1], high_scores[j]
+
+        return high_scores
                     
     def draw_scores(self):
-        high_scores = self.load_sort_socres()
+        high_scores = self.load_sort_scores()
         #Vertical scroll for each score line
         y_offset = 130
         #Obtain the top high scores

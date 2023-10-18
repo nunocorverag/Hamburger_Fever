@@ -248,6 +248,7 @@ while running:
                     if HighScoreScreen.check_return_click(mouse_pos):
                         draw_menu = True
                         draw_high_scores = False
+                        restart_game()
         if start_game:
             if event.type == pygame.KEYDOWN and gamestate == 1:
                 # #Placeholder for input name screen

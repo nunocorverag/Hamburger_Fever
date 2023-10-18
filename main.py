@@ -244,22 +244,26 @@ while running:
                 if OverScreen.check_high_score_click(mouse_pos):
                     draw_game_over = False
                     draw_high_scores = True
+            if draw_high_scores:
+                    if HighScoreScreen.check_return_click(mouse_pos):
+                        draw_menu = True
+                        draw_high_scores = False
         if start_game:
             if event.type == pygame.KEYDOWN and gamestate == 1:
-                #Placeholder for input name screen
-                if event.key == pygame.K_r:
-                    draw_menu = False
-                    start_game = False
-                    draw_game_over = False
-                    input_name = True
+                # #Placeholder for input name screen
+                # if event.key == pygame.K_r:
+                #     draw_menu = False
+                #     start_game = False
+                #     draw_game_over = False
+                #     input_name = True
 
-                #Placeholder for input name screen
-                if event.key == pygame.K_t:
-                    draw_menu = False
-                    start_game = False
-                    draw_game_over = False
-                    input_name = False
-                    draw_high_scores = True
+                # #Placeholder for input name screen
+                # if event.key == pygame.K_t:
+                #     draw_menu = False
+                #     start_game = False
+                #     draw_game_over = False
+                #     input_name = False
+                #     draw_high_scores = True
 
                 #Detect element
                 if event.key == pygame.K_f:

@@ -13,6 +13,10 @@ start_button_image = pygame.image.load("images/buttons/start_btn.jpeg")
 #Exit
 exit_button_image = pygame.image.load("images/buttons/exit_btn.jpeg")
 
+##button position
+button1_pos = (215,550)
+button2_pos = (625,550)
+
 #Title font
 title_font = pygame.font.Font("freesansbold.ttf", 64)
 
@@ -35,14 +39,14 @@ class MenuScreen:
         
     # Verify if start button was clicked
     def check_start_click(mouse_pos):
-        start_button_rect = start_button_image.get_rect(topleft=(210, 450))
+        start_button_rect = start_button_image.get_rect(topleft=button1_pos)
         if start_button_rect.collidepoint(mouse_pos):
             return True
         return False
 
     # Verify if exit button was clicked
     def check_exit_click(mouse_pos):
-        exit_button_rect = exit_button_image.get_rect(topleft=(610, 450))
+        exit_button_rect = exit_button_image.get_rect(topleft=button2_pos)
         if exit_button_rect.collidepoint(mouse_pos):
             return True
         return False
@@ -51,5 +55,5 @@ class MenuScreen:
         self.screen.blit(BIG_background_menu_image, (0,0))
         ##self.screen.blit(hamburger_image, (440,220))
         ##title_text(self.screen)
-        self.screen.blit(start_button_image, (215,550))
-        self.screen.blit(exit_button_image, (625,550))
+        self.screen.blit(start_button_image, button1_pos)
+        self.screen.blit(exit_button_image, button2_pos)

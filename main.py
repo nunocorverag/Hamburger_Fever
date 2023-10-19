@@ -28,7 +28,7 @@ game_over = OverScreen(screen)
 high_score = HighScoreScreen(screen)
 
 #Background
-background_image = pygame.image.load("images/background.jpg")
+background_image = pygame.image.load("images/Fondos/Fondo1.png")
 background_image = pygame.transform.scale(background_image, (1080, 720))
 
 #Background Sound
@@ -36,13 +36,13 @@ mixer.music.load("music/background_music.mp3")
 mixer.music.play(-1)
 
 #Order font
-order_font = pygame.font.Font("freesansbold.ttf", 20)
+order_font = pygame.font.Font("fuentes/dogica.ttf", 20)
 
 #Delivered order font
-delivered_font = pygame.font.Font("freesansbold.ttf", 20)
+delivered_font = pygame.font.Font("fuentes/dogica.ttf", 20)
 
 #Game Over text
-over_font = pygame.font.Font("freesansbold.ttf", 64)
+over_font = pygame.font.Font("fuentes/Daydream.ttf", 64)
 
 #deliver order
 deliver_order = False
@@ -76,6 +76,9 @@ gamestate = 0
 #Initialize requested order variable
 requested_order = None
 
+#Define Coord where the first element will make collision
+Floor_value =  450
+
 #Determine if the menu has to be drawn or no
 draw_menu = True
 
@@ -93,9 +96,9 @@ draw_high_scores = False
 
 #Score
 score_value = 0
-score_font  = pygame.font.Font("freesansbold.ttf", 32)
-scoreX = 500
-scoreY = 10
+score_font  = pygame.font.Font("fuentes/Daydream.ttf", 35)
+scoreX = 420
+scoreY = 52
 
 #Crear variables de imágenes
 meat_img = pygame.image.load("images/buttons/boton_carne.jpg").convert_alpha()
@@ -142,13 +145,13 @@ class AngryBar():
 angry_bar = AngryBar(10, 10, 300, 40, 100)
 
 def show_score(x, y):
-    score_text = score_font.render("Score : " + str(score_value), True, (102,0,204))
+    score_text = score_font.render("Score : " + str(score_value), True, (255,255,228))
     screen.blit(score_text, (x, y))
 
 def isCollision(object2_y,object1_y,i):
     # Distance between two points D = sqrt*(x2 - x1)^2 + (y2 - y1)^2)
     if i == 0:
-        if object_order[i].yPosition > 550:
+        if object_order[i].yPosition > Floor_value:
             return True
     elif object1_y - object_order[i-1].height / 2 < object2_y + object_order[i].height:
         return True
@@ -185,7 +188,7 @@ def create_order():
     return requested_order
 
 def game_over_text():
-    over_text = over_font.render("GAME OVER : ", True, (255,255,255))
+    over_text = over_font.render("GAME OVER : ", True, (255,255,228))
     screen.blit(over_text, (200, 250))
 
 def check_collisions(i):
@@ -373,8 +376,8 @@ while running:
         y = 20  # Initial y position
 
         for line in lines:
-            text_surface = order_font.render(line, True, (0, 0, 0))
-            screen.blit(text_surface, (900, y))  # Adjust the position of the text
+            text_surface = order_font.render(line, True, (255,255,228))
+            screen.blit(text_surface, (840, y))  # Adjust the position of the text
             y += 30  # Ajust the spaces between lines
 
         #Draw angry bar

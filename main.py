@@ -289,6 +289,12 @@ while running:
                     start_game = False
                     draw_game_over = True
                     input_name = False
+                #Placeholder for imput name screen
+                if event.key == pygame.K_t:
+                    draw_menu = False
+                    start_game = False
+                    draw_game_over = False
+                    input_name = True
 
                 #Detect element
             

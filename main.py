@@ -299,13 +299,13 @@ while running:
 
                 #Detect element
             
-                if event.key == pygame.K_f:
+                if event.key == pygame.K_s:
                     print("Pressed: s")
                     lettuce = food_element(456, -70, "Lettuce")
                     object_order.append(lettuce)
                     object_order[-1].height = 10
                     number_elements_list[0] += 1
-                if event.key == pygame.K_j:
+                if event.key == pygame.K_k:
 
                     print("Pressed: k")
                     tomato = food_element(480, -70, "Tomatoe")

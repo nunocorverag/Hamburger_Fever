@@ -248,7 +248,6 @@ while running:
                 if MenuScreen.check_start_click(mouse_pos):
                     draw_menu = False
                     start_game = True
-                    print("Starting game...")
             if draw_game_over:
                 if OverScreen.check_continue_click(mouse_pos):
                     draw_menu = True
@@ -267,20 +266,17 @@ while running:
                 mouse_pos = pygame.mouse.get_pos()
                 #Botones de visualización y funcionalidad
                 if meat_button.check_clicked_button(mouse_pos):
-                    print("Pressed: button meat")
                     meat = food_element(460, -70, "Meat")
                     object_order.append(meat)
                     number_elements_list[2] += 1
 
                 if lechu_button.check_clicked_button(mouse_pos):
-                    print("Pressed: button lettuce")
                     lettuce = food_element(456, -70, "Lettuce")
                     object_order.append(lettuce)
                     object_order[-1].height = 10
                     number_elements_list[0] += 1
 
                 if toma_button.check_clicked_button(mouse_pos):
-                    print("Pressed: button tomatoe")
                     tomato = food_element(480, -70, "Tomatoe")
                     object_order.append(tomato)
                     object_order[-1].height = 3
@@ -302,27 +298,23 @@ while running:
                 #Detect element
             
                 if event.key == pygame.K_f:
-                    print("Pressed: s")
                     lettuce = food_element(456, -70, "Lettuce")
                     object_order.append(lettuce)
                     object_order[-1].height = 10
                     number_elements_list[0] += 1
                 if event.key == pygame.K_j:
 
-                    print("Pressed: k")
                     tomato = food_element(480, -70, "Tomatoe")
                     object_order.append(tomato)
                     object_order[-1].height = 3
                     number_elements_list[1] += 1
 
                 if event.key == pygame.K_d:
-                    print("Pressed: d")
                     meat = food_element(460, -70, "Meat")
                     object_order.append(meat)
                     number_elements_list[2] += 1
 
                 if event.key == pygame.K_SPACE:
-                    print("Pressed: SPACE")
                     ##user wont be able to input afterwards
                     gamestate = 2
                     #Deliver order
@@ -334,16 +326,13 @@ while running:
                     if start_time == 0:
                         start_time = pygame.time.get_ticks()
                         
-                    print(number_elements_list)
                     if requested_order == number_elements_list:
                             message = show_order_delivered_message(True)
-                            score_value += score_to_get(requested_order)
-                            if angry_bar.angriness >=10:
-                                angry_bar.angriness += -10     
+                            score_value += score_to_get(requested_order)  
                     else:
                             message = show_order_delivered_message(False)
                             if angry_bar.angriness < 100:
-                                angry_bar.angriness += 10
+                                angry_bar.angriness += 25
                     show_message = True
                     requested_order = None
                     ##object_order = []
@@ -430,7 +419,6 @@ while running:
     if input_name:
             user_name = game_over.get_user_name(score_value)
             if user_name:
-                print("User name: ", user_name)
                 input_name = False
                 draw_game_over = True
 

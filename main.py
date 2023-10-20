@@ -394,7 +394,6 @@ while running:
         if show_message and score_value > 0:
             #Subtract to the current time the time when the spacebar was pressed
             elapsed_time = pygame.time.get_ticks() - start_time
-            screen.blit(message, (10, 70))
             #Check if the time is higher than the message display time specified
             if elapsed_time >= message_display_time:
                 show_message = False
@@ -405,11 +404,9 @@ while running:
 
         if show_order_status:
             elapsed_time = pygame.time.get_ticks() - start_time
-            screen.blit(message, (10, 70))
-            if elapsed_time >= message_display_time:
-                show_order_status: False
-                start_time = 0  # Reset the start time
-                elapsed_time = 0  # Reset the elapsed time
+            screen.blit(message, (10, 120))
+            if elapsed_time >= message_display_time/2:
+                show_order_status = False
 
 
         for i in range(len(object_order)):

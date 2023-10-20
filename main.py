@@ -61,6 +61,9 @@ number_elements_list = [0,0,0]
 # Time tracking variables
 start_time = 0
 elapsed_time = 0
+show_order_status = False
+order_status_time = 2000
+
 message_display_time = 5000
 show_message = True
 
@@ -220,13 +223,14 @@ def score_to_get(order_quantity_list):
 
 def restart_game():
     # Restarting the global variables
-    global object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, gravity, requested_order, score_value, angry_bar
+    global object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, gravity, requested_order, score_value, angry_bar, show_order_status
     object_order = []
     number_elements_list = [0,0,0]
     start_time = 0
     elapsed_time = 0
     message_display_time = 5000
     show_message = True
+    show_order_status = False
     gravity = 2
     requested_order = None
     score_value = 0
@@ -338,6 +342,7 @@ while running:
                             message = show_order_delivered_message(False)
                             if angry_bar.angriness < 100:
                                 angry_bar.angriness += 25
+                    show_order_status = True
                     requested_order = None
                     ##object_order = []
                     number_elements_list = [0,0,0]
@@ -389,7 +394,7 @@ while running:
         if show_message and score_value > 0:
             #Subtract to the current time the time when the spacebar was pressed
             elapsed_time = pygame.time.get_ticks() - start_time
-            ##screen.blit(message, (10, 70))
+            screen.blit(message, (10, 70))
             #Check if the time is higher than the message display time specified
             if elapsed_time >= message_display_time:
                 show_message = False
@@ -397,6 +402,15 @@ while running:
                 elapsed_time = 0  # Reset the elapsed time
             elif elapsed_time >= message_display_time - message_display_time/5:
                 hide_text_order = abs(hide_text_order - 1)
+
+        if show_order_status:
+            elapsed_time = pygame.time.get_ticks() - start_time
+            screen.blit(message, (10, 70))
+            if elapsed_time >= message_display_time:
+                show_order_status: False
+                start_time = 0  # Reset the start time
+                elapsed_time = 0  # Reset the elapsed time
+
 
         for i in range(len(object_order)):
 

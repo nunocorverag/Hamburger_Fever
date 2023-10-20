@@ -2,6 +2,7 @@ import pygame
 import random
 import botones
 import json
+import numpy
 
 #Handle music in the game
 from pygame import mixer
@@ -60,8 +61,8 @@ number_elements_list = [0,0,0]
 # Time tracking variables
 start_time = 0
 elapsed_time = 0
-message_display_time = 2000
-show_message = False
+message_display_time = 5000
+show_message = True
 
 ##daclare acceleration (gravity)
 gravity = 2
@@ -93,6 +94,9 @@ draw_game_over = False
 
 #Draw high scores
 draw_high_scores = False
+
+##Draw order text
+hide_text_order = 0
 
 #Score
 score_value = 0
@@ -221,8 +225,8 @@ def restart_game():
     number_elements_list = [0,0,0]
     start_time = 0
     elapsed_time = 0
-    message_display_time = 2000
-    show_message = False
+    message_display_time = 5000
+    show_message = True
     gravity = 2
     requested_order = None
     score_value = 0
@@ -232,7 +236,7 @@ def slide():
     return
 
 fps = pygame.time.Clock()
-
+elapsed_time = 0
 running = True
 while running:
 
@@ -317,6 +321,7 @@ while running:
                 if event.key == pygame.K_SPACE:
                     ##user wont be able to input afterwards
                     gamestate = 2
+                    message_display_time -= 100
                     #Deliver order
                     # Start the timer
                     top_bread = food_element(444, -70, "Top_bun")
@@ -333,7 +338,7 @@ while running:
                             message = show_order_delivered_message(False)
                             if angry_bar.angriness < 100:
                                 angry_bar.angriness += 25
-                    show_message = True
+                    screen.blit(message,(0,200))
                     requested_order = None
                     ##object_order = []
                     number_elements_list = [0,0,0]
@@ -345,7 +350,7 @@ while running:
     if start_game:
         fps.tick(30)
         ##print(fps.get_fps()) ##only use if you want the fps to be printed
-
+        print(hide_text_order)
         screen.fill((0,0,0))
         screen.blit(background_image, (0,0))
 
@@ -366,7 +371,10 @@ while running:
 
         for line in lines:
             text_surface = order_font.render(line, True, (255,255,228))
-            screen.blit(text_surface, (840, y))  # Adjust the position of the text
+
+            if show_message and not hide_text_order:
+                screen.blit(text_surface, (810 - numpy.cos(pygame.time.get_ticks()/100)*10, y))  # Adjust the position of the text
+                
             y += 30  # Ajust the spaces between lines
 
         #Draw angry bar
@@ -379,15 +387,17 @@ while running:
 
         # Show the message for 2 seconds
         # Show the message for a specified duration
-        if show_message:
+        if show_message and score_value > 0:
             #Subtract to the current time the time when the spacebar was pressed
             elapsed_time = pygame.time.get_ticks() - start_time
-            screen.blit(message, (10, 70))
+            ##screen.blit(message, (10, 70))
             #Check if the time is higher than the message display time specified
             if elapsed_time >= message_display_time:
                 show_message = False
                 start_time = 0  # Reset the start time
                 elapsed_time = 0  # Reset the elapsed time
+            elif elapsed_time >= message_display_time - message_display_time/5:
+                hide_text_order = abs(hide_text_order - 1)
 
         for i in range(len(object_order)):
 
@@ -407,6 +417,8 @@ while running:
 
             if object_order[-1].move == False and gamestate == 2:
                 gamestate = 3
+                show_message = True
+                hide_text_order = 0
 
             if  object_order[0].xPosition > 1200 and gamestate == 3:
                 object_order = []

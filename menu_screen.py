@@ -1,4 +1,5 @@
 import pygame
+import json
 
 pygame.init()
 
@@ -20,6 +21,12 @@ button2_pos = (625,550)
 #Title font
 title_font = pygame.font.Font("freesansbold.ttf", 64)
 
+def get_high_score():
+    with open('Hamburger_Fever_Scores.txt', 'r') as file:
+        data = json.load(file)
+        scores = set(data.values())
+        return max(scores)
+    
 class MenuScreen:
 
     def __init__(self, screen):
@@ -43,3 +50,7 @@ class MenuScreen:
         self.screen.blit(BIG_background_menu_image, (0,0))
         self.screen.blit(start_button_image, button1_pos)
         self.screen.blit(exit_button_image, button2_pos)
+        highest_score = get_high_score()
+        text = title_font.render(f'Highest Score: {highest_score}', True, (0, 0, 0))
+        text_rect = text.get_rect(center=(self.screen.get_width() // 2, 150))
+        self.screen.blit(text, text_rect)

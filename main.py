@@ -338,7 +338,6 @@ while running:
                             message = show_order_delivered_message(False)
                             if angry_bar.angriness < 100:
                                 angry_bar.angriness += 25
-                    screen.blit(message,(0,200))
                     requested_order = None
                     ##object_order = []
                     number_elements_list = [0,0,0]

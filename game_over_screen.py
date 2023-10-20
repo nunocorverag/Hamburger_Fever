@@ -43,7 +43,6 @@ class OverScreen:
             return True
         return False
     
-    # This function is in testing
     def get_user_name(self, score):
         # Define the initial position for the input box
         input_box_width = 140
@@ -80,7 +79,7 @@ class OverScreen:
                 # If the mouse button collides with the input box, activate it
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if input_box.collidepoint(event.pos):
-                        active = not active
+                        active = True
                     elif enter_button.collidepoint(event.pos) and len(text) > 0:
                         done = True
                     else:

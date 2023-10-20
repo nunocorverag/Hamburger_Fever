@@ -20,18 +20,6 @@ button2_pos = (625,550)
 #Title font
 title_font = pygame.font.Font("freesansbold.ttf", 64)
 
-#Hamburger image
-##hamburger_image = pygame.image.load("images/food/hamburger.png")
-##hamburger_image = pygame.transform.scale(hamburger_image, (200, 200))
-
-# Font configuration
-font = pygame.font.Font("freesansbold.ttf", 36)
-
-##REMOVE
-##def title_text(screen):
-##    title_text = title_font.render("Hamburger Fever", True, (255,255,255))
-##    screen.blit(title_text, (250, 150))
-
 class MenuScreen:
 
     def __init__(self, screen):
@@ -53,7 +41,5 @@ class MenuScreen:
 
     def draw(self):
         self.screen.blit(BIG_background_menu_image, (0,0))
-        ##self.screen.blit(hamburger_image, (440,220))
-        ##title_text(self.screen)
         self.screen.blit(start_button_image, button1_pos)
         self.screen.blit(exit_button_image, button2_pos)

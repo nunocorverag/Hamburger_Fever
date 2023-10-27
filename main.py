@@ -487,7 +487,6 @@ while running:
 
     if draw_high_scores:
         high_score.draw()
-
-
+        
     # Refresh the screen
     pygame.display.update()

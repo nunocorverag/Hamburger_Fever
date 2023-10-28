@@ -135,23 +135,11 @@ def show_score(x, y):
     score_text = score_font.render("Score : " + str(score_value), True, (255,255,228))
     screen.blit(score_text, (x, y))
 
-def show_order_delivered_message(successful):
-    if successful:
-        delivered_message = delivered_font.render("Order delivered successfully", True, (0,255,0))
-    else:
-        delivered_message = delivered_font.render("Order delivered incorrectly", True, (255,0,0))
-    return delivered_message
-
 def show_order(requested_order):
     order_message = ""
     for i in range(len(requested_order)):
-        if i == 0:
-            element_name = "Lettuce"
-        elif i == 1:
-            element_name = "Tomatoe"
-        elif i == 2:
-            element_name = "Meat"
 
+        element_name = ("Lettuce","Tomatoe","Meat")[i]
         order_message += str(requested_order[i]) + " x " + str(element_name) + "\n"
     
     return order_message
@@ -311,12 +299,13 @@ while running:
                         start_time = pygame.time.get_ticks()
                         
                     if requested_order == number_elements_list:
-                            message = show_order_delivered_message(True)
-                            score_value += score_to_get(requested_order)  
+                        message = True
+                        score_value += score_to_get(requested_order)  
                     else:
-                            message = show_order_delivered_message(False)
-                            if angry_bar.angriness < 100:
-                                angry_bar.angriness += 25
+                        message = False
+                        if angry_bar.angriness < 100:
+                            angry_bar.angriness += 25
+                    message = delivered_message = delivered_font.render(f"Order delivered {('incorrectly','successfully')[message]}", True, ((255,0,0),(0,255,0))[message])
                     show_order_status = True
                     requested_order = None
                     ##object_order = []

@@ -218,7 +218,7 @@ def restart_game():
     angry_bar = AngryBar(10, 10, 300, 40, 100)
 
     ##Declare Delivery guy
-    guy = delivery_man.the_guy(screen, 0, 300)
+    guy = delivery_man.the_guy(screen, -200, 300)
 
 #set instances-------------------------------------------------------------------------------------------------------------------
 restart_game()
@@ -322,7 +322,6 @@ while running:
                 number_elements_list = [0,0,0]
 
         fps.tick(30)
-        print(hide_text_order)
         screen.fill((0,0,0))
         screen.blit(background_image, (0,0))
 
@@ -376,6 +375,8 @@ while running:
             if elapsed_time >= message_display_time/2:
                 show_order_status = False
 
+        delivery_man.delivery(gamestate, guy) ##calls the module that takes care of the actions of the delivery man
+
         for i in range(len(object_order)):
 
             if gamestate == 3:
@@ -403,8 +404,6 @@ while running:
             create_food_instance("Under-bun")
             object_order[0].move = False
             gamestate = 1
-
-        delivery_man.delivery(gamestate, guy) ##calls the module that takes care of the actions of the delivery man
             
 
     elif input_name:

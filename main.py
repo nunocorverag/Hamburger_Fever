@@ -1,4 +1,5 @@
 import collision_functions
+import delivery_man
 import pygame
 import random
 import json
@@ -187,7 +188,7 @@ def score_to_get(order_quantity_list):
     return score_to_get
 
 def restart_game():
-    global object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, score_value, angry_bar, show_order_status, deliver_order, order_status_time, gamestate, hide_text_order
+    global object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, score_value, angry_bar, show_order_status, deliver_order, order_status_time, gamestate, hide_text_order, guy
     #deliver order
     deliver_order = False
     object_order = []
@@ -215,6 +216,9 @@ def restart_game():
     #Score
     score_value = 0
     angry_bar = AngryBar(10, 10, 300, 40, 100)
+
+    ##Declare Delivery guy
+    guy = delivery_man.the_guy(screen, 0, 300)
 
 #set instances-------------------------------------------------------------------------------------------------------------------
 restart_game()
@@ -372,7 +376,6 @@ while running:
             if elapsed_time >= message_display_time/2:
                 show_order_status = False
 
-
         for i in range(len(object_order)):
 
             if gamestate == 3:
@@ -400,7 +403,10 @@ while running:
             create_food_instance("Under-bun")
             object_order[0].move = False
             gamestate = 1
+
+        delivery_man.delivery(gamestate, guy) ##calls the module that takes care of the actions of the delivery man
             
+
     elif input_name:
             user_name = game_over.get_user_name(score_value)
             if user_name:

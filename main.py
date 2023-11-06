@@ -32,6 +32,7 @@ order_font = pygame.font.Font("fuentes/dogica.ttf", 20)
 delivered_font = pygame.font.Font("fuentes/dogica.ttf", 20)
 over_font = pygame.font.Font("fuentes/Daydream.ttf", 64)
 score_font  = pygame.font.Font("fuentes/Daydream.ttf", 35)
+time_left_font = pygame.font.Font("fuentes/dogica.ttf", 30)
 
 #Crear variables de imágenes
 meat_img = pygame.image.load("images/buttons/boton_carne.jpg").convert_alpha()
@@ -213,12 +214,40 @@ def score_to_get(order_quantity_list):
         score_to_get += quantity
     return score_to_get
 
+def deliver_order():
+    global gamestate, message_display_time, score_value, completed_orders, show_order_status, order_distribution, start_time, requested_order, number_elements_list, angry_bar
+    gamestate = 2
+    message_display_time -= 100
+    create_food_instance("Top_bun")
+
+    print("Requested order:", requested_order)
+    print("Number elements list: ", number_elements_list)
+
+    if start_time == 0:
+        start_time = pygame.time.get_ticks()
+                    
+    if requested_order == number_elements_list:
+        message = True
+        score_value += score_to_get(requested_order)  
+        completed_orders += 1
+    else:
+        message = False
+        if angry_bar.angriness < 100:
+            angry_bar.angriness += 25
+
+    message = delivered_font.render(f"Order delivered {('incorrectly','successfully')[message]}", True, ((255,0,0),(0,255,0))[message])
+
+    show_order_status = True
+    requested_order = None
+    order_distribution = None
+    number_elements_list = [0,0,0]
+
+    return message
+
 def restart_game():
-    global completed_orders, object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, order_distribution, score_value, angry_bar, show_order_status, deliver_order, order_status_time, gamestate, hide_text_order
+    global time_limit, completed_orders, object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, order_distribution, score_value, angry_bar, show_order_status, order_status_time, gamestate, hide_text_order
     completed_orders = 0
     
-    #deliver order
-    deliver_order = False
     object_order = []
 
     #This array will get the number of each element
@@ -245,6 +274,8 @@ def restart_game():
     #Score
     score_value = 0
     angry_bar = AngryBar(10, 10, 300, 40, 100)
+
+    time_limit = 5
 
 #set instances-------------------------------------------------------------------------------------------------------------------
 restart_game()
@@ -327,30 +358,33 @@ while running:
                 create_food_instance("Meat")
 
             if lock_key(pygame.K_SPACE):
-                gamestate = 2
-                message_display_time -= 100
-                create_food_instance("Top_bun")
+                message = deliver_order()
+                #NOTE, TUVE QUE USAR LAS SIGUIENTES VARIABLES EN GLOBAL EN LA FUNCION
 
-                print("Requested order:", requested_order)
-                print("Number elements list: ", number_elements_list)
+                # gamestate = 2
+                # message_display_time -= 100
+                # create_food_instance("Top_bun")
 
-                if start_time == 0:
-                    start_time = pygame.time.get_ticks()
+                # print("Requested order:", requested_order)
+                # print("Number elements list: ", number_elements_list)
+
+                # if start_time == 0:
+                #     start_time = pygame.time.get_ticks()
                                 
-                if requested_order == number_elements_list:
-                    message = True
-                    score_value += score_to_get(requested_order)  
-                    completed_orders += 1
-                else:
-                    message = False
-                    if angry_bar.angriness < 100:
-                        angry_bar.angriness += 25
+                # if requested_order == number_elements_list:
+                #     message = True
+                #     score_value += score_to_get(requested_order)  
+                #     completed_orders += 1
+                # else:
+                #     message = False
+                #     if angry_bar.angriness < 100:
+                #         angry_bar.angriness += 25
 
-                message = delivered_font.render(f"Order delivered {('incorrectly','successfully')[message]}", True, ((255,0,0),(0,255,0))[message])
-                show_order_status = True
-                requested_order = None
-                order_distribution = None
-                number_elements_list = [0,0,0]
+                # message = delivered_font.render(f"Order delivered {('incorrectly','successfully')[message]}", True, ((255,0,0),(0,255,0))[message])
+                # show_order_status = True
+                # requested_order = None
+                # order_distribution = None
+                # number_elements_list = [0,0,0]
 
         fps.tick(30)
         screen.fill((0,0,0))
@@ -388,6 +422,16 @@ while running:
             start_game = False
             input_name = True
 
+        # Calculate the time elapsed in seconds
+        elapsed_time_seconds = (pygame.time.get_ticks() - start_time) // 1000
+        time_left = time_limit - elapsed_time_seconds
+        time_left_message = time_left_font.render("Time left:" + str(time_left), True, (255,0,0))
+        screen.blit(time_left_message, (10,75))
+
+        #Deliver order
+        if time_left <= 0:
+            message = deliver_order()
+
         # Show the message for 2 seconds
         # Show the message for a specified duration
         if show_message and score_value > 0:
@@ -406,7 +450,6 @@ while running:
             screen.blit(message, (10, 120))
             if elapsed_time >= message_display_time/2:
                 show_order_status = False
-
 
         for i in range(len(object_order)):
 

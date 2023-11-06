@@ -188,7 +188,7 @@ def score_to_get(order_quantity_list):
     return score_to_get
 
 def restart_game():
-    global object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, score_value, angry_bar, show_order_status, deliver_order, order_status_time, gamestate, hide_text_order, guy
+    global object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, score_value, angry_bar, show_order_status, deliver_order, order_status_time, gamestate, hide_text_order, guy, head
     #deliver order
     deliver_order = False
     object_order = []
@@ -219,6 +219,7 @@ def restart_game():
 
     ##Declare Delivery guy
     guy = delivery_man.the_guy(screen, -200, 300)
+    head = delivery_man.the_guy_head(guy)
 
 #set instances-------------------------------------------------------------------------------------------------------------------
 restart_game()
@@ -375,7 +376,7 @@ while running:
             if elapsed_time >= message_display_time/2:
                 show_order_status = False
 
-        delivery_man.delivery(gamestate, guy) ##calls the module that takes care of the actions of the delivery man
+        delivery_man.delivery(gamestate, guy, head, pygame.time.get_ticks()) ##calls the module that takes care of the actions of the delivery man
 
         for i in range(len(object_order)):
 

@@ -275,7 +275,7 @@ def restart_game():
     score_value = 0
     angry_bar = AngryBar(10, 10, 300, 40, 100)
 
-    time_limit = 5
+    time_limit = 12
 
 #set instances-------------------------------------------------------------------------------------------------------------------
 restart_game()
@@ -358,6 +358,7 @@ while running:
                 create_food_instance("Meat")
 
             if lock_key(pygame.K_SPACE):
+                start_time = 0
                 message = deliver_order()
                 #NOTE, TUVE QUE USAR LAS SIGUIENTES VARIABLES EN GLOBAL EN LA FUNCION
 
@@ -385,6 +386,9 @@ while running:
                 # requested_order = None
                 # order_distribution = None
                 # number_elements_list = [0,0,0]
+
+        if start_time == 0:
+            start_time = pygame.time.get_ticks()
 
         fps.tick(30)
         screen.fill((0,0,0))
@@ -425,11 +429,16 @@ while running:
         # Calculate the time elapsed in seconds
         elapsed_time_seconds = (pygame.time.get_ticks() - start_time) // 1000
         time_left = time_limit - elapsed_time_seconds
+        print("Time limit:",time_limit)
+        print("Time left:",time_left)
+        print("Elapsed time:",elapsed_time_seconds)
+        print("Start time:",start_time)
         time_left_message = time_left_font.render("Time left:" + str(time_left), True, (255,0,0))
         screen.blit(time_left_message, (10,75))
 
         #Deliver order
         if time_left <= 0:
+            start_time = 0
             message = deliver_order()
 
         # Show the message for 2 seconds

@@ -162,8 +162,7 @@ def show_order(requested_order):
     order_message = ""
     for i in range(len(requested_order)):
 
-        element_name = ("Lettuce","Tomatoe","Meat")[i]
-        order_message += str(requested_order[i]) + " x " + str(element_name) + "\n"
+        order_message += str(requested_order[i][0]) + " x " + str(requested_order[i][1]) + "\n"
     
     return order_message
 
@@ -172,9 +171,23 @@ def create_order():
     lettuce_num = random.randint(0,3)
     tomato_num = random.randint(0,3)
     meat_num = random.randint(1,3)
+
+    #Position 0 --> n elements
+    #position 1 --> name element
+    lettuce_tuple = (lettuce_num, "lettuce")
+    tomato_tuple = (tomato_num, "tomato")
+    meat_tuple = (meat_num, "meat")
+
+    #This will be the requested order array that will be compared with the user delivered order
     requested_order = [lettuce_num, tomato_num, meat_num]
 
-    return requested_order
+    #This will save the order distribution in the screen (will be different every time)
+    order_distribution = [lettuce_tuple, tomato_tuple, meat_tuple]
+
+    #Shuffle the requested order list to show the elements in different order
+    random.shuffle(order_distribution)
+
+    return (requested_order, order_distribution)
 
 def game_over_text():
     over_text = over_font.render("GAME OVER : ", True, (255,255,228))
@@ -187,7 +200,7 @@ def score_to_get(order_quantity_list):
     return score_to_get
 
 def restart_game():
-    global object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, score_value, angry_bar, show_order_status, deliver_order, order_status_time, gamestate, hide_text_order
+    global object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, order_distribution, score_value, angry_bar, show_order_status, deliver_order, order_status_time, gamestate, hide_text_order
     #deliver order
     deliver_order = False
     object_order = []
@@ -206,8 +219,9 @@ def restart_game():
     ##States if the player may have input or not
     gamestate = 0
 
-    #Initialize requested order variable
+    #Initialize requested order & distribution variables
     requested_order = None
+    order_distribution = None
 
     ##Draw order text
     hide_text_order = 0
@@ -301,6 +315,9 @@ while running:
                 message_display_time -= 100
                 create_food_instance("Top_bun")
 
+                print("Requested order:", requested_order)
+                print("Number elements list: ", number_elements_list)
+
                 if start_time == 0:
                     start_time = pygame.time.get_ticks()
                                 
@@ -315,10 +332,10 @@ while running:
                 message = delivered_font.render(f"Order delivered {('incorrectly','successfully')[message]}", True, ((255,0,0),(0,255,0))[message])
                 show_order_status = True
                 requested_order = None
+                order_distribution = None
                 number_elements_list = [0,0,0]
 
         fps.tick(30)
-        print(hide_text_order)
         screen.fill((0,0,0))
         screen.blit(background_image, (0,0))
 
@@ -330,11 +347,12 @@ while running:
         show_score(scoreX, scoreY)
 
         if requested_order == None:
-            requested_order = create_order()
+            requested_order, order_distribution = create_order()
 
         # Show the requested order message
-        order_text = show_order(requested_order)
+        order_text = show_order(order_distribution)
         lines = order_text.split('\n')
+
         y = 20  # Initial y position
 
         for line in lines:

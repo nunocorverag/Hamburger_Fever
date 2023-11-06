@@ -166,11 +166,25 @@ def show_order(requested_order):
     
     return order_message
 
+def calculate_min_max_order(completed_orders):
+    min_ord = completed_orders//3 + 1
+
+    max_ord = completed_orders//3 + 3
+
+    if min_ord > 4:
+        min_ord = 4
+
+    if max_ord > 8:
+        max_ord = 8
+
+    return min_ord, max_ord
+
 #create customer order
-def create_order():
-    lettuce_num = random.randint(0,3)
-    tomato_num = random.randint(0,3)
-    meat_num = random.randint(1,3)
+def create_order(completed_orders):
+    min_ord, max_ord = calculate_min_max_order(completed_orders)
+    lettuce_num = random.randint(min_ord,max_ord)
+    tomato_num = random.randint(min_ord,max_ord)
+    meat_num = random.randint(min_ord,max_ord)
 
     #Position 0 --> n elements
     #position 1 --> name element
@@ -200,7 +214,9 @@ def score_to_get(order_quantity_list):
     return score_to_get
 
 def restart_game():
-    global object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, order_distribution, score_value, angry_bar, show_order_status, deliver_order, order_status_time, gamestate, hide_text_order
+    global completed_orders, object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, order_distribution, score_value, angry_bar, show_order_status, deliver_order, order_status_time, gamestate, hide_text_order
+    completed_orders = 0
+    
     #deliver order
     deliver_order = False
     object_order = []
@@ -324,6 +340,7 @@ while running:
                 if requested_order == number_elements_list:
                     message = True
                     score_value += score_to_get(requested_order)  
+                    completed_orders += 1
                 else:
                     message = False
                     if angry_bar.angriness < 100:
@@ -347,7 +364,7 @@ while running:
         show_score(scoreX, scoreY)
 
         if requested_order == None:
-            requested_order, order_distribution = create_order()
+            requested_order, order_distribution = create_order(completed_orders)
 
         # Show the requested order message
         order_text = show_order(order_distribution)

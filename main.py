@@ -37,6 +37,9 @@ score_font  = pygame.font.Font("fuentes/Daydream.ttf", 35)
 meat_img = pygame.image.load("images/buttons/boton_carne.jpg").convert_alpha()
 lech_img = pygame.image.load("images/buttons/boton_lechuga.jpg").convert_alpha()
 toma_img = pygame.image.load("images/buttons/boton_tomate.jpg").convert_alpha()
+fish_img = pygame.image.load("images/buttons/button_F.png").convert_alpha()
+cheese_img = pygame.image.load("images/buttons/button_J.png").convert_alpha()
+tocino_img = pygame.image.load("images/buttons/button_L.png").convert_alpha()
 
 ##----------------------------------------------------------------------------------------------
 
@@ -219,9 +222,12 @@ def restart_game():
 #set instances-------------------------------------------------------------------------------------------------------------------
 restart_game()
 
-meat_button = button(200, 600, meat_img, 0.2, screen)
-lechu_button = button(400, 600, lech_img, 0.2, screen)
-toma_button = button(600, 600, toma_img, 0.2, screen)
+meat_button = button(60, 600, meat_img, 0.2, screen)
+lechu_button = button(225, 600, lech_img, 0.2, screen)
+toma_button = button(390, 600, toma_img, 0.2, screen)
+fish_button = button(555, 600, fish_img, 0.2, screen)
+cheese_button = button(720, 600, cheese_img, 0.2, screen)
+tocino_button = button(885, 600, tocino_img, 0.2, screen)
 
 fps = pygame.time.Clock()
 elapsed_time = 0
@@ -326,6 +332,9 @@ while running:
         meat_button.draw()
         lechu_button.draw()
         toma_button.draw()
+        fish_button.draw()
+        cheese_button.draw()
+        tocino_button.draw()
 
         show_score(scoreX, scoreY)
 

@@ -290,9 +290,9 @@ def restart_game():
 restart_game()
 
 #Buttons dimensions
-meat_button = button(200, 600, meat_img, 0.2, screen)
-lechu_button = button(400, 600, lech_img, 0.2, screen)
-toma_button = button(600, 600, toma_img, 0.2, screen)
+meat_button = button(20, 600, meat_img, 0.2, screen)
+lechu_button = button(200, 600, lech_img, 0.2, screen)
+toma_button = button(380, 600, toma_img, 0.2, screen)
 fish_button = button(555, 600, fish_img, 0.2, screen)
 cheese_button = button(720, 600, cheese_img, 0.2, screen)
 onion_button = button(885, 600, onion_img, 0.2, screen)

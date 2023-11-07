@@ -38,6 +38,9 @@ time_left_font = pygame.font.Font("fuentes/dogica.ttf", 30)
 meat_img = pygame.image.load("images/buttons/boton_carne.jpg").convert_alpha()
 lech_img = pygame.image.load("images/buttons/boton_lechuga.jpg").convert_alpha()
 toma_img = pygame.image.load("images/buttons/boton_tomate.jpg").convert_alpha()
+fish_img = pygame.image.load("images/buttons/button_L.png").convert_alpha()
+cheese_img = pygame.image.load("images/buttons/button_J.png").convert_alpha()
+onion_img = pygame.image.load("images/buttons/button_F.png").convert_alpha()
 
 ##----------------------------------------------------------------------------------------------
 
@@ -78,10 +81,10 @@ draw_high_scores = False
 scoreX = 420
 scoreY = 52
 
-objects_height = {'Lettuce':10,'Tomatoe':4,'Meat':20,'Top_bun':60,'Under-bun':20}
-objects_x = {'Lettuce':456,'Tomatoe':480,'Meat':460,'Top_bun':444,'Under-bun':444}
+objects_height = {'Lettuce':10,'Tomatoe':4,'Meat':20,'Top_bun':60,'Under-bun':20, "Cheese":5, "Fish":7, "Onion":5}
+objects_x = {'Lettuce':449,'Tomatoe':480,'Meat':460,'Top_bun':444,'Under-bun':444,"Cheese":455, "Fish":420, "Onion":460}
 
-available_ingredients = ('Lettuce','Tomatoe','Meat','Top_bun','Under-bun')
+available_ingredients = ("Cheese",'Lettuce','Tomatoe','Meat', "Fish", "Onion", 'Top_bun','Under-bun')
 
 pressed_keys = []
 
@@ -186,18 +189,24 @@ def create_order(completed_orders):
     lettuce_num = random.randint(min_ord,max_ord)
     tomato_num = random.randint(min_ord,max_ord)
     meat_num = random.randint(min_ord,max_ord)
+    cheese_num = random.randint(min_ord,max_ord)
+    fish_num = random.randint(min_ord,max_ord)
+    onion_num = random.randint(min_ord,max_ord)
 
     #Position 0 --> n elements
     #position 1 --> name element
     lettuce_tuple = (lettuce_num, "lettuce")
     tomato_tuple = (tomato_num, "tomato")
     meat_tuple = (meat_num, "meat")
+    cheese_tuple = (cheese_num, "cheese")
+    onion_tuple = (onion_num, "onion")
+    fish_tuple = (fish_num, "fish")
 
     #This will be the requested order array that will be compared with the user delivered order
-    requested_order = [lettuce_num, tomato_num, meat_num]
+    requested_order = [lettuce_num, tomato_num, meat_num, cheese_num,fish_num,onion_num]
 
     #This will save the order distribution in the screen (will be different every time)
-    order_distribution = [lettuce_tuple, tomato_tuple, meat_tuple]
+    order_distribution = [lettuce_tuple, tomato_tuple, meat_tuple, cheese_tuple, onion_tuple, fish_tuple]
 
     #Shuffle the requested order list to show the elements in different order
     random.shuffle(order_distribution)
@@ -240,7 +249,7 @@ def deliver_order():
     show_order_status = True
     requested_order = None
     order_distribution = None
-    number_elements_list = [0,0,0]
+    number_elements_list = [0,0,0,0,0,0]
 
     return message
 
@@ -251,7 +260,7 @@ def restart_game():
     object_order = []
 
     #This array will get the number of each element
-    number_elements_list = [0,0,0]
+    number_elements_list = [0,0,0,0,0,0]
 
     # Time tracking variables
     start_time = 0
@@ -280,9 +289,13 @@ def restart_game():
 #set instances-------------------------------------------------------------------------------------------------------------------
 restart_game()
 
+#Buttons dimensions
 meat_button = button(200, 600, meat_img, 0.2, screen)
 lechu_button = button(400, 600, lech_img, 0.2, screen)
 toma_button = button(600, 600, toma_img, 0.2, screen)
+fish_button = button(555, 600, fish_img, 0.2, screen)
+cheese_button = button(720, 600, cheese_img, 0.2, screen)
+onion_button = button(885, 600, onion_img, 0.2, screen)
 
 fps = pygame.time.Clock()
 elapsed_time = 0
@@ -329,6 +342,15 @@ while running:
                 if toma_button.check_clicked_button(mouse_pos):
                     create_food_instance("Tomatoe")
 
+                if cheese_button.check_clicked_button(mouse_pos):
+                    create_food_instance("Cheese")
+
+                if fish_button.check_clicked_button(mouse_pos):
+                    create_food_instance("Fish")
+
+                if onion_button.check_clicked_button(mouse_pos):
+                    create_food_instance("Onion")
+
     # Refresh and draw the menu screen
     if draw_menu:
         menu.draw()
@@ -356,6 +378,15 @@ while running:
 
             if lock_key(pygame.K_d):
                 create_food_instance("Meat")
+
+            if lock_key(pygame.K_j):
+                create_food_instance("Cheese")
+
+            if lock_key(pygame.K_l):
+                create_food_instance("Fish")
+
+            if lock_key(pygame.K_f):
+                create_food_instance("Onion")
 
             if lock_key(pygame.K_SPACE):
                 start_time = 0
@@ -398,6 +429,9 @@ while running:
         meat_button.draw()
         lechu_button.draw()
         toma_button.draw()
+        fish_button.draw()
+        cheese_button.draw()
+        onion_button.draw()
 
         show_score(scoreX, scoreY)
 

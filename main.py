@@ -84,7 +84,7 @@ scoreY = 52
 objects_height = {'Lettuce':10,'Tomatoe':4,'Meat':20,'Top_bun':60,'Under-bun':20, "Cheese":5, "Fish":7, "Onion":5}
 objects_x = {'Lettuce':449,'Tomatoe':480,'Meat':460,'Top_bun':444,'Under-bun':444,"Cheese":455, "Fish":420, "Onion":460}
 
-available_ingredients = ("Cheese",'Lettuce','Tomatoe','Meat', "Fish", "Onion", 'Top_bun','Under-bun')
+available_ingredients = ("Lettuce", "Tomatoe", "Meat", "Cheese", "Fish", "Onion", "Top_bun", "Under-bun")
 
 pressed_keys = []
 
@@ -203,10 +203,10 @@ def create_order(completed_orders):
     fish_tuple = (fish_num, "fish")
 
     #This will be the requested order array that will be compared with the user delivered order
-    requested_order = [lettuce_num, tomato_num, meat_num, cheese_num,fish_num,onion_num]
+    requested_order = [lettuce_num, tomato_num, meat_num, cheese_num, fish_num, onion_num]
 
     #This will save the order distribution in the screen (will be different every time)
-    order_distribution = [lettuce_tuple, tomato_tuple, meat_tuple, cheese_tuple, onion_tuple, fish_tuple]
+    order_distribution = [lettuce_tuple, tomato_tuple, meat_tuple, cheese_tuple, fish_tuple, onion_tuple]
 
     #Shuffle the requested order list to show the elements in different order
     random.shuffle(order_distribution)
@@ -229,6 +229,7 @@ def deliver_order():
     message_display_time -= 100
     create_food_instance("Top_bun")
 
+    # for i in range(len)
     print("Requested order:", requested_order)
     print("Number elements list: ", number_elements_list)
 
@@ -284,7 +285,7 @@ def restart_game():
     score_value = 0
     angry_bar = AngryBar(10, 10, 300, 40, 100)
 
-    time_limit = 12
+    time_limit = 30
 
 #set instances-------------------------------------------------------------------------------------------------------------------
 restart_game()
@@ -463,10 +464,6 @@ while running:
         # Calculate the time elapsed in seconds
         elapsed_time_seconds = (pygame.time.get_ticks() - start_time) // 1000
         time_left = time_limit - elapsed_time_seconds
-        print("Time limit:",time_limit)
-        print("Time left:",time_left)
-        print("Elapsed time:",elapsed_time_seconds)
-        print("Start time:",start_time)
         time_left_message = time_left_font.render("Time left:" + str(time_left), True, (255,0,0))
         screen.blit(time_left_message, (10,75))
 

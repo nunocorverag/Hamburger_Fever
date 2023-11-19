@@ -1,4 +1,5 @@
 import collision_functions
+import delivery_man
 import pygame
 import random
 import json
@@ -255,7 +256,7 @@ def deliver_order():
     return message
 
 def restart_game():
-    global time_limit, completed_orders, object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, order_distribution, score_value, angry_bar, show_order_status, order_status_time, gamestate, hide_text_order
+    global time_limit, completed_orders, object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, order_distribution, score_value, angry_bar, show_order_status, order_status_time, gamestate, hide_text_order, guy, head
     completed_orders = 0
     
     object_order = []
@@ -286,6 +287,10 @@ def restart_game():
     angry_bar = AngryBar(10, 10, 300, 40, 100)
 
     time_limit = 30
+
+    #Declare Delivery guy
+    guy = delivery_man.the_guy(screen, -200, 300)
+    head = delivery_man.the_guy_head(guy)
 
 #set instances-------------------------------------------------------------------------------------------------------------------
 restart_game()
@@ -490,6 +495,8 @@ while running:
             screen.blit(message, (10, 120))
             if elapsed_time >= message_display_time/2:
                 show_order_status = False
+
+        delivery_man.delivery(gamestate, guy, head, pygame.time.get_ticks())
 
         for i in range(len(object_order)):
 

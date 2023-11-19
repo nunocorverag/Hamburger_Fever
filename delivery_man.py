@@ -79,7 +79,7 @@ def delivery(gamestate, body, head, total_time):
         head.state = 'blinking'
         segment_end = random.randint(2000,4000)
 
-    if gamestate == 1:
+    if gamestate == 4:
         if body.x > MAX_X_COORD:
             body.x = -200
         

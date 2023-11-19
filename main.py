@@ -21,7 +21,7 @@ screen = pygame.display.set_mode((1080,720))
 pygame.display.set_caption("Hamburguer Fever")
 
 #Background
-background_image = pygame.image.load("images/Fondos/Fondo1.png")
+background_image = pygame.image.load("images/Fondos/Fondo_color3.png")
 background_image = pygame.transform.scale(background_image, (1080, 720))
 
 #Background Sound
@@ -141,6 +141,15 @@ class button():
         #impresión imágen
         self.screen.blit(self.image, (self.rect.x, self.rect.y))
 
+class just_an_image():
+    def __init__(self, image, x, y):
+        self.image = image
+        self.x = x
+        self.y = y
+
+    def draw(self):
+        screen.blit(self.image, (self.x, self.y))
+
 ##functions-------------------------------------------------------------------------------------
 
 def lock_key(key):
@@ -256,7 +265,10 @@ def deliver_order():
     return message
 
 def restart_game():
-    global time_limit, completed_orders, object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message, requested_order, order_distribution, score_value, angry_bar, show_order_status, order_status_time, gamestate, hide_text_order, guy, head
+    global time_limit, completed_orders, object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message
+    global requested_order, order_distribution, score_value, angry_bar, show_order_status, order_status_time, gamestate, hide_text_order, guy, head
+    global table
+
     completed_orders = 0
     
     object_order = []
@@ -273,7 +285,7 @@ def restart_game():
     show_message = True
 
     ##States if the player may have input or not
-    gamestate = 0
+    gamestate = 4
 
     #Initialize requested order & distribution variables
     requested_order = None
@@ -289,8 +301,11 @@ def restart_game():
     time_limit = 30
 
     #Declare Delivery guy
-    guy = delivery_man.the_guy(screen, -200, 300)
+    guy = delivery_man.the_guy(screen, -200, 260)
     head = delivery_man.the_guy_head(guy)
+
+    table_image = pygame.image.load('images/other_objects/mesa_verde.png').convert_alpha()
+    table = just_an_image(table_image, 0, 376)
 
 #set instances-------------------------------------------------------------------------------------------------------------------
 restart_game()
@@ -467,15 +482,16 @@ while running:
             input_name = True
 
         # Calculate the time elapsed in seconds
-        elapsed_time_seconds = (pygame.time.get_ticks() - start_time) // 1000
-        time_left = time_limit - elapsed_time_seconds
-        time_left_message = time_left_font.render("Time left:" + str(time_left), True, (255,0,0))
-        screen.blit(time_left_message, (10,75))
+        if score_value > 0:
+            elapsed_time_seconds = (pygame.time.get_ticks() - start_time) // 1000
+            time_left = time_limit - elapsed_time_seconds
+            time_left_message = time_left_font.render("Time left:" + str(time_left), True, (255,0,0))
+            screen.blit(time_left_message, (10,75))
 
-        #Deliver order
-        if time_left <= 0:
-            start_time = 0
-            message = deliver_order()
+            #Deliver order
+            if time_left <= 0:
+                start_time = 0
+                message = deliver_order()
 
         # Show the message for 2 seconds
         # Show the message for a specified duration
@@ -497,6 +513,7 @@ while running:
                 show_order_status = False
 
         delivery_man.delivery(gamestate, guy, head, pygame.time.get_ticks())
+        table.draw()
 
         for i in range(len(object_order)):
 
@@ -522,10 +539,11 @@ while running:
             if  object_order[0].xPosition > 1200 and gamestate == 3:
                 object_order = []
         else: 
-            create_food_instance("Under-bun")
-            object_order[0].move = False
-            gamestate = 1
-            
+            if gamestate == 3:
+                create_food_instance("Under-bun")
+                object_order[0].move = False
+                gamestate = 1
+                
     elif input_name:
             user_name = game_over.get_user_name(score_value)
             if user_name:

@@ -20,10 +20,6 @@ pygame.init()
 screen = pygame.display.set_mode((1080,720))
 pygame.display.set_caption("Hamburguer Fever")
 
-#Background
-background_image = pygame.image.load("images/Fondos/Fondo_color3.png")
-background_image = pygame.transform.scale(background_image, (1080, 720))
-
 #Background Sound
 mixer.music.load("music/background_music.mp3")
 mixer.music.play(-1)
@@ -89,6 +85,13 @@ available_ingredients = ("Lettuce", "Tomatoe", "Meat", "Cheese", "Fish", "Onion"
 
 pressed_keys = []
 
+# Setting up the coordinates that will be substracted from the coordinates of every object, giving the illusion of a camera
+camera_x = 0
+camera_y = 0
+
+camera_central_point_x = 0
+camera_central_point_y = 0
+
 ##classes-------------------------------------------------------------------------------------
 
 class food_element():
@@ -139,7 +142,7 @@ class button():
     
     def draw(self):
         #impresión imágen
-        self.screen.blit(self.image, (self.rect.x, self.rect.y))
+        self.screen.blit(self.image, (self.rect.x - camera_x, self.rect.y - camera_y))
 
 class just_an_image():
     def __init__(self, image, x, y):
@@ -147,8 +150,8 @@ class just_an_image():
         self.x = x
         self.y = y
 
-    def draw(self):
-        screen.blit(self.image, (self.x, self.y))
+    def draw(self, parallax):
+        screen.blit(self.image, (self.x - camera_x * parallax, self.y - camera_y * parallax))
 
 ##functions-------------------------------------------------------------------------------------
 
@@ -267,7 +270,6 @@ def deliver_order():
 def restart_game():
     global time_limit, completed_orders, object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message
     global requested_order, order_distribution, score_value, angry_bar, show_order_status, order_status_time, gamestate, hide_text_order, guy, head
-    global table
 
     completed_orders = 0
     
@@ -304,11 +306,14 @@ def restart_game():
     guy = delivery_man.the_guy(screen, -200, 260)
     head = delivery_man.the_guy_head(guy)
 
-    table_image = pygame.image.load('images/other_objects/mesa_verde.png').convert_alpha()
-    table = just_an_image(table_image, 0, 376)
-
 #set instances-------------------------------------------------------------------------------------------------------------------
 restart_game()
+
+table_image = pygame.image.load('images/other_objects/mesa_verde.png').convert_alpha()
+table = just_an_image(table_image, 0, 376)
+
+expanded_background_image = pygame.image.load('images/Fondos/expanded_background3.png').convert_alpha()
+expanded_background = just_an_image(expanded_background_image, 0, -280)
 
 #Buttons dimensions
 meat_button = button(20, 600, meat_img, 0.2, screen)
@@ -377,8 +382,19 @@ while running:
         menu.draw()
 
     elif start_game:
+        
+        pressed = pygame.key.get_pressed()
+
+        if pressed[pygame.K_UP]:
+            camera_central_point_y = -200
+
+        if pressed[pygame.K_DOWN]:
+            camera_central_point_y = 0
+
+        camera_y += round((camera_central_point_y - camera_y) / 10)
 
         if gamestate == 1:
+
             if lock_key(pygame.K_r):
                 draw_menu = False
                 start_game = False
@@ -443,8 +459,11 @@ while running:
             start_time = pygame.time.get_ticks()
 
         fps.tick(30)
-        screen.fill((0,0,0))
-        screen.blit(background_image, (0,0))
+        
+        expanded_background.draw(parallax = 0.25)
+        delivery_man.get_camera(guy, camera_x, camera_y)
+        delivery_man.delivery(gamestate, guy, head, pygame.time.get_ticks())
+        table.draw(parallax = 1)
 
         #Draw buttons
         meat_button.draw()
@@ -511,9 +530,6 @@ while running:
             screen.blit(message, (10, 120))
             if elapsed_time >= message_display_time/2:
                 show_order_status = False
-
-        delivery_man.delivery(gamestate, guy, head, pygame.time.get_ticks())
-        table.draw()
 
         for i in range(len(object_order)):
 

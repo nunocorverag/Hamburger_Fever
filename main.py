@@ -26,7 +26,7 @@ mixer.music.load("music/background_music.mp3")
 mixer.music.play(-1)
 
 #Order font
-order_font = pygame.font.Font("fuentes/dogica.ttf", 20)
+order_font = pygame.font.Font("fuentes/dogica.ttf", 30)
 delivered_font = pygame.font.Font("fuentes/dogica.ttf", 20)
 over_font = pygame.font.Font("fuentes/Daydream.ttf", 64)
 score_font  = pygame.font.Font("fuentes/Daydream.ttf", 35)
@@ -50,7 +50,7 @@ ACCX = 3
 REBOTE = 0.5
 
 #Define Coord where the first element will make collision
-FLOOR_VALUE =  450
+FLOOR_VALUE =  449
 
 #Menu screen object
 menu = MenuScreen(screen)
@@ -205,6 +205,16 @@ def show_order(requested_order):
     
     return order_message
 
+def draw_order_text(x, y, space, parallax):
+    ##Drawing the order text
+    for line in lines:
+        text_surface = order_font.render(line, True, (52,17,31))
+
+        if show_message and not hide_text_order:
+            screen.blit(text_surface, (x - np.cos(pygame.time.get_ticks()/100)*10 - camera_x * parallax, y - camera_y * parallax))  # Adjust the position of the text
+                
+        y += space  # Ajust the spaces between lines
+
 def calculate_min_max_order(completed_orders):
     min_ord = completed_orders//3 + 1
 
@@ -280,7 +290,7 @@ def deliver_order():
         if angry_bar.angriness < 100:
             angry_bar.angriness += 25
 
-    message = delivered_font.render(f"Order delivered {('incorrectly','successfully')[message]}", True, ((255,0,0),(0,255,0))[message])
+    message = delivered_font.render(f"Order delivered {('incorrectly','successfully')[message]}", True, ((255, 255, 228),(156, 185, 59))[message])
 
     show_order_status = True
     requested_order = None
@@ -514,24 +524,12 @@ while running:
         cheese_button.draw()
         onion_button.draw()
 
-        show_score(scoreX, scoreY)
-
         if requested_order == None:
             requested_order, order_distribution = create_order(completed_orders)
 
         # Show the requested order message
         order_text = show_order(order_distribution)
         lines = order_text.split('\n')
-
-        y = 20  # Initial y position
-
-        for line in lines:
-            text_surface = order_font.render(line, True, (255,255,228))
-
-            if show_message and not hide_text_order:
-                screen.blit(text_surface, (810 - np.cos(pygame.time.get_ticks()/100)*10, y))  # Adjust the position of the text
-                
-            y += 30  # Ajust the spaces between lines
 
         #Draw angry bar
         angry_bar.draw(screen)
@@ -542,11 +540,18 @@ while running:
             input_name = True
 
         # Calculate the time elapsed in seconds
-        if score_value > 0:
+        # Time limit code
+        if gamestate == 1:
             elapsed_time_seconds = (pygame.time.get_ticks() - start_time) // 1000
             time_left = time_limit - elapsed_time_seconds
-            time_left_message = time_left_font.render("Time left:" + str(time_left), True, (255,0,0))
-            screen.blit(time_left_message, (10,75))
+
+            if time_left <= 10: time_text_color = (217, 36, 60)
+            else: time_text_color = (119, 214, 193)
+
+            time_left_message = time_left_font.render("Time left:" + str(time_left), True, time_text_color)
+            time_left_message_white = time_left_font.render("Time left:" + str(time_left), True, (255, 255, 228))
+            screen.blit(time_left_message, (10,78))
+            screen.blit(time_left_message_white, (10,75))
 
             #Deliver order
             if time_left <= 0:
@@ -569,9 +574,15 @@ while running:
         if show_order_status:
             elapsed_time = pygame.time.get_ticks() - start_time
             screen.blit(message, (10, 120))
-            if elapsed_time >= message_display_time/2:
+            if elapsed_time >= message_display_time / 2:
                 show_order_status = False
 
+        ##Print score on screen
+        show_score(scoreX, scoreY)
+
+        ##Everything having to do with changes in gamestate
+
+        ##Animation for hamburger dash when an order is delivered
         for i in range(len(object_order)):
 
             if gamestate == 3:
@@ -586,26 +597,32 @@ while running:
 
             object_order[i].draw()
 
-        ##Everything having to do with changes in gamestate
-
+        ##changes in camera
         if gamestate == 4:
             speech.animation_frame = 0
+
+            ## We delete all food items
+            object_order = []
 
         elif gamestate == 5:
             camera_central_point_y = -200
 
             ##Draw speech_bubble
-            if speech.animation_frame < 6:
-                speech.animation_frame += 0.5
             speech.sheet_x = np.floor(speech.animation_frame % 7)
             speech.draw(parallax = 0.6)
+
+            if speech.animation_frame < 6:
+                speech.animation_frame += 0.5
+            else:
+                ##Drawing the order text
+                draw_order_text(110, -50, space = 40, parallax = 0.5)
 
         elif gamestate == 6:
             camera_central_point_y = 0
             speech.draw(parallax = 0.6)
 
         else:
-            if speech.animation_frame > 1:
+            if speech.animation_frame > 0:
                 speech.animation_frame -= 0.5
                 speech.sheet_x = np.floor(speech.animation_frame % 7)
                 speech.draw(parallax = 0.6)
@@ -619,12 +636,13 @@ while running:
                 hide_text_order = 0
 
             if  object_order[0].xPosition > 1200 and gamestate == 3:
-                object_order = []
+                gamestate = 7
         else: 
             if gamestate == 3:
                 create_food_instance("Under-bun")
                 object_order[0].move = False
                 gamestate = 1
+        
 
     #End of main game loop
                 

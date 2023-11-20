@@ -15,7 +15,7 @@ segment_end = 2000
 class the_guy_head():
     def __init__(self, body):
         self.pair = body
-        self.offset = 0
+        self.offset = 1
         self.direction = 1
         self.sheet_x = 0
         self.sheet_y = 0
@@ -113,8 +113,6 @@ def delivery(gamestate, body, head, total_time):
     body.spdx = body.spdx * 0.8
 
     if gamestate == 4:
-        if body.x > MAX_X_COORD:
-            body.x = -200
 
         if body.x < STANDING_X_COORD:
             body.spdx = MOVEMENT_SPEED
@@ -129,7 +127,17 @@ def delivery(gamestate, body, head, total_time):
             to_return = 6
         
     elif gamestate == 6:
+        head.offset = 1
         to_return = 3
+
+    elif gamestate == 7:
+
+        body.spdx = MOVEMENT_SPEED
+        walk_animation = True
+        
+        if body.x > MAX_X_COORD:
+            body.x = -200
+            to_return = 4
         
 
     if segment >= segment_end and head.state != 'talking':

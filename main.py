@@ -91,6 +91,11 @@ camera_y = 0
 
 camera_central_point_x = 0
 camera_central_point_y = 0
+camera_central_point_x_extra = 0
+camera_central_point_y_extra = 0
+# The bigger the nunmber, the more tank-ish the camera feels
+CAMERA_SPEED = 10
+
 
 ##classes-------------------------------------------------------------------------------------
 
@@ -108,7 +113,7 @@ class food_element():
     
     def draw(self):
         self.image = pygame.image.load("images/food/Final_Sprites/" + self.food_name + ".png").convert_alpha()
-        screen.blit(self.image, (self.xPosition, self.yPosition))
+        screen.blit(self.image, (self.xPosition - camera_x, self.yPosition - camera_y))
 
 class AngryBar():
     def __init__(self, x, y, w, h, max_angriness):
@@ -166,7 +171,7 @@ def lock_key(key):
             pressed_keys.pop(pressed_keys.index(key))
 
 def create_food_instance(name):
-    item = food_element(objects_x[name], -70, name, objects_height[name])
+    item = food_element(objects_x[name], camera_y - 90, name, objects_height[name])
     object_order.append(item)
     if name != 'Top_bun'and name != 'Under-bun':
         number_elements_list[available_ingredients.index(name)] += 1
@@ -309,10 +314,10 @@ def restart_game():
 #set instances-------------------------------------------------------------------------------------------------------------------
 restart_game()
 
-table_image = pygame.image.load('images/other_objects/mesa_verde.png').convert_alpha()
-table = just_an_image(table_image, 0, 376)
+table_image = pygame.image.load('images/other_objects/mesa_verde_2.png').convert_alpha()
+table = just_an_image(table_image, -100, 376)
 
-expanded_background_image = pygame.image.load('images/Fondos/expanded_background3.png').convert_alpha()
+expanded_background_image = pygame.image.load('images/Fondos/expanded_background_4.png').convert_alpha()
 expanded_background = just_an_image(expanded_background_image, 0, -280)
 
 #Buttons dimensions
@@ -382,16 +387,24 @@ while running:
         menu.draw()
 
     elif start_game:
-        
+
+        #Just a cute feature to give the player semi-controll of the camera
         pressed = pygame.key.get_pressed()
 
         if pressed[pygame.K_UP]:
-            camera_central_point_y = -200
+            camera_central_point_y_extra = 40
+        elif pressed[pygame.K_DOWN]:
+            camera_central_point_y_extra = -40
+        else: camera_central_point_y_extra = 0
 
-        if pressed[pygame.K_DOWN]:
-            camera_central_point_y = 0
+        if pressed[pygame.K_LEFT]:
+            camera_central_point_x_extra = 40
+        elif pressed[pygame.K_RIGHT]:
+            camera_central_point_x_extra = -40
+        else: camera_central_point_x_extra = 0
 
-        camera_y += round((camera_central_point_y - camera_y) / 10)
+        camera_y += round((camera_central_point_y + camera_central_point_y_extra - camera_y) / CAMERA_SPEED)
+        camera_x += round((camera_central_point_x + camera_central_point_x_extra - camera_x) / CAMERA_SPEED)
 
         if gamestate == 1:
 
@@ -460,9 +473,16 @@ while running:
 
         fps.tick(30)
         
+        #Orden en el que dibujar cada objeto en pantalla
         expanded_background.draw(parallax = 0.25)
+        #Se comparte la posición de la cámara con otro módulo
         delivery_man.get_camera(guy, camera_x, camera_y)
+        #Se ejecutan todos los procesos relacionados al repartidor.
         delivery_man.delivery(gamestate, guy, head, pygame.time.get_ticks())
+
+        if delivery_man.send_changes_in_gamestate():
+            gamestate = delivery_man.send_changes_in_gamestate()
+
         table.draw(parallax = 1)
 
         #Draw buttons
@@ -545,6 +565,14 @@ while running:
 
             object_order[i].draw()
 
+        ##Everything having to do with changes in gamestate
+
+        if gamestate == 5:
+            camera_central_point_y = -200
+
+        if gamestate == 6:
+            camera_central_point_y = 0
+
         if len(object_order):
 
             if object_order[-1].move == False and gamestate == 2:
@@ -559,6 +587,8 @@ while running:
                 create_food_instance("Under-bun")
                 object_order[0].move = False
                 gamestate = 1
+
+    #End of main game loop
                 
     elif input_name:
             user_name = game_over.get_user_name(score_value)

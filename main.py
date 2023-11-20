@@ -1,9 +1,10 @@
 import collision_functions
 import delivery_man
+import spritesheet
 import pygame
 import random
 import json
-import numpy
+import numpy as np
 from pygame import mixer
 
 #Import objects from other files
@@ -78,7 +79,7 @@ draw_high_scores = False
 scoreX = 420
 scoreY = 52
 
-objects_height = {'Lettuce':10,'Tomatoe':4,'Meat':20,'Top_bun':60,'Under-bun':20, "Cheese":5, "Fish":7, "Onion":5}
+objects_height = {'Lettuce':10,'Tomatoe':5,'Meat':20,'Top_bun':60,'Under-bun':20, "Cheese":5, "Fish":20, "Onion":5}
 objects_x = {'Lettuce':449,'Tomatoe':480,'Meat':460,'Top_bun':444,'Under-bun':444,"Cheese":455, "Fish":420, "Onion":460}
 
 available_ingredients = ("Lettuce", "Tomatoe", "Meat", "Cheese", "Fish", "Onion", "Top_bun", "Under-bun")
@@ -95,6 +96,9 @@ camera_central_point_x_extra = 0
 camera_central_point_y_extra = 0
 # The bigger the nunmber, the more tank-ish the camera feels
 CAMERA_SPEED = 10
+
+SPEECH_SPRITES_LENGHT = 644
+SPEECH_SPRITES_HEIGHT = 420
 
 
 ##classes-------------------------------------------------------------------------------------
@@ -157,6 +161,19 @@ class just_an_image():
 
     def draw(self, parallax):
         screen.blit(self.image, (self.x - camera_x * parallax, self.y - camera_y * parallax))
+
+class speech_bubble():
+    def __init__(self, ss, x, y):
+        self.ss = ss
+        self.x = x
+        self.y = y
+        self.sheet_x = 0
+        self.sheet_y = 0
+        self.animation_frame = 0
+
+    def draw(self, parallax):
+        speech_costume = self.ss.imgat((self.sheet_x * SPEECH_SPRITES_LENGHT, self.sheet_y * SPEECH_SPRITES_HEIGHT, SPEECH_SPRITES_LENGHT, SPEECH_SPRITES_HEIGHT))
+        screen.blit(speech_costume, (self.x - camera_x * parallax, self.y - camera_y * parallax))
 
 ##functions-------------------------------------------------------------------------------------
 
@@ -318,7 +335,10 @@ table_image = pygame.image.load('images/other_objects/mesa_verde_2.png').convert
 table = just_an_image(table_image, -100, 376)
 
 expanded_background_image = pygame.image.load('images/Fondos/expanded_background_4.png').convert_alpha()
-expanded_background = just_an_image(expanded_background_image, 0, -280)
+expanded_background = just_an_image(expanded_background_image, -100, -280)
+
+speech_sprite_sheet = spritesheet.get_spritesheet('images/other_objects/speech_bubble.png')
+speech = speech_bubble(speech_sprite_sheet, -20, -150)
 
 #Buttons dimensions
 meat_button = button(20, 600, meat_img, 0.2, screen)
@@ -406,6 +426,7 @@ while running:
         camera_y += round((camera_central_point_y + camera_central_point_y_extra - camera_y) / CAMERA_SPEED)
         camera_x += round((camera_central_point_x + camera_central_point_x_extra - camera_x) / CAMERA_SPEED)
 
+        #Defining keys that will ba counted as input
         if gamestate == 1:
 
             if lock_key(pygame.K_r):
@@ -508,7 +529,7 @@ while running:
             text_surface = order_font.render(line, True, (255,255,228))
 
             if show_message and not hide_text_order:
-                screen.blit(text_surface, (810 - numpy.cos(pygame.time.get_ticks()/100)*10, y))  # Adjust the position of the text
+                screen.blit(text_surface, (810 - np.cos(pygame.time.get_ticks()/100)*10, y))  # Adjust the position of the text
                 
             y += 30  # Ajust the spaces between lines
 
@@ -567,12 +588,29 @@ while running:
 
         ##Everything having to do with changes in gamestate
 
-        if gamestate == 5:
+        if gamestate == 4:
+            speech.animation_frame = 0
+
+        elif gamestate == 5:
             camera_central_point_y = -200
 
-        if gamestate == 6:
-            camera_central_point_y = 0
+            ##Draw speech_bubble
+            if speech.animation_frame < 6:
+                speech.animation_frame += 0.5
+            speech.sheet_x = np.floor(speech.animation_frame % 7)
+            speech.draw(parallax = 0.6)
 
+        elif gamestate == 6:
+            camera_central_point_y = 0
+            speech.draw(parallax = 0.6)
+
+        else:
+            if speech.animation_frame > 1:
+                speech.animation_frame -= 0.5
+                speech.sheet_x = np.floor(speech.animation_frame % 7)
+                speech.draw(parallax = 0.6)
+
+        ##Check if there exists food elements on screen
         if len(object_order):
 
             if object_order[-1].move == False and gamestate == 2:

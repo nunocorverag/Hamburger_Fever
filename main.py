@@ -242,7 +242,7 @@ def create_order(completed_orders):
         onion_num = 0
     elif completed_orders < 8:
         cheese_num = random.randint(min_ord,max_ord)
-    elif completed_orders < 12:
+    elif completed_orders < 15:
         fish_num = random.randint(min_ord,max_ord)
     else:
         onion_num = random.randint(min_ord,max_ord)

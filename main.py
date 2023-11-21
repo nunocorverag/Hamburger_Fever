@@ -208,9 +208,10 @@ def show_order(requested_order):
 def draw_order_text(x, y, space, parallax):
     ##Drawing the order text
     for line in lines:
+        print(show_message)
         text_surface = order_font.render(line, True, (52,17,31))
 
-        if show_message and not hide_text_order:
+        if not hide_text_order:
             screen.blit(text_surface, (x - np.cos(pygame.time.get_ticks()/100)*10 - camera_x * parallax, y - camera_y * parallax))  # Adjust the position of the text
                 
         y += space  # Ajust the spaces between lines

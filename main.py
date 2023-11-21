@@ -33,9 +33,9 @@ score_font  = pygame.font.Font("fuentes/Daydream.ttf", 35)
 time_left_font = pygame.font.Font("fuentes/dogica.ttf", 30)
 
 #Crear variables de imágenes
-meat_img = pygame.image.load("images/buttons/boton_carne.jpg").convert_alpha()
-lech_img = pygame.image.load("images/buttons/boton_lechuga.jpg").convert_alpha()
-toma_img = pygame.image.load("images/buttons/boton_tomate.jpg").convert_alpha()
+meat_img = pygame.image.load("images/buttons/boton_carne.png").convert_alpha()
+lech_img = pygame.image.load("images/buttons/boton_lechuga.png").convert_alpha()
+toma_img = pygame.image.load("images/buttons/boton_tomate.png").convert_alpha()
 fish_img = pygame.image.load("images/buttons/button_L.png").convert_alpha()
 cheese_img = pygame.image.load("images/buttons/button_J.png").convert_alpha()
 onion_img = pygame.image.load("images/buttons/button_F.png").convert_alpha()
@@ -366,12 +366,12 @@ speech_sprite_sheet = spritesheet.get_spritesheet('images/other_objects/speech_b
 speech = speech_bubble(speech_sprite_sheet, -20, -150)
 
 #Buttons dimensions
-meat_button = button(20, 600, meat_img, 0.2, screen)
-lechu_button = button(200, 600, lech_img, 0.2, screen)
-toma_button = button(380, 600, toma_img, 0.2, screen)
-fish_button = button(555, 600, fish_img, 0.2, screen)
-cheese_button = button(720, 600, cheese_img, 0.2, screen)
-onion_button = button(885, 600, onion_img, 0.2, screen)
+meat_button = button(200, 592, meat_img, 0.25, screen)
+lechu_button = button(20, 592, lech_img, 0.25, screen)
+toma_button = button(720, 592, toma_img, 0.25, screen)
+fish_button = button(885, 592, fish_img, 0.25, screen)
+cheese_button = button(555, 592, cheese_img, 0.25, screen)
+onion_button = button(380, 592, onion_img, 0.25, screen)
 
 fps = pygame.time.Clock()
 elapsed_time = 0

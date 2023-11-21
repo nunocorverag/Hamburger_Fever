@@ -208,11 +208,13 @@ def show_order(requested_order):
 def draw_order_text(x, y, space, parallax):
     ##Drawing the order text
     for line in lines:
-        print(show_message)
-        text_surface = order_font.render(line, True, (52,17,31))
-        screen.blit(text_surface, (x - np.cos(pygame.time.get_ticks()/100)*10 - camera_x * parallax, y - camera_y * parallax))  # Adjust the position of the text
+        if line:
+            if line[0] != "0":
+                print(show_message)
+                text_surface = order_font.render(line, True, (52,17,31))
+                screen.blit(text_surface, (x - np.cos(pygame.time.get_ticks()/100)*10 - camera_x * parallax, y - camera_y * parallax))  # Adjust the position of the text
                 
-        y += space  # Ajust the spaces between lines
+                y += space  # Ajust the spaces between lines
 
 def calculate_min_max_order(completed_orders):
     min_ord = completed_orders//3 + 1
@@ -284,7 +286,7 @@ def score_to_get(order_quantity_list):
     return score_to_get
 
 def deliver_order():
-    global gamestate, message_display_time, score_value, completed_orders, show_order_status, order_distribution, start_time, requested_order, number_elements_list, angry_bar
+    global time_limit, gamestate, message_display_time, score_value, completed_orders, show_order_status, order_distribution, start_time, requested_order, number_elements_list, angry_bar
     gamestate = 2
     message_display_time -= 100
     create_food_instance("Top_bun")
@@ -293,6 +295,7 @@ def deliver_order():
     print("Requested order:", requested_order)
     print("Number elements list: ", number_elements_list)
 
+
     if start_time == 0:
         start_time = pygame.time.get_ticks()
                     
@@ -300,6 +303,8 @@ def deliver_order():
         message = True
         score_value += score_to_get(requested_order)  
         completed_orders += 1
+        if time_limit >= 6:
+            time_limit -= 1
     else:
         message = False
         if angry_bar.angriness < 100:
@@ -315,7 +320,7 @@ def deliver_order():
     return message
 
 def restart_game():
-    global time_limit, completed_orders, object_order, number_elements_list, start_time, elapsed_time, message_display_time, show_message
+    global time_limit, completed_orders, object_order, number_elements_list, start_time, start_order_time, elapsed_time, message_display_time, show_message
     global requested_order, order_distribution, score_value, angry_bar, show_order_status, order_status_time, gamestate, hide_text_order, guy, head
 
     completed_orders = 0
@@ -326,6 +331,7 @@ def restart_game():
     number_elements_list = [0,0,0,0,0,0]
 
     # Time tracking variables
+    start_order_time = 0
     start_time = 0
     elapsed_time = 0
     show_order_status = False
@@ -485,6 +491,7 @@ while running:
                 create_food_instance("Onion")
 
             if lock_key(pygame.K_SPACE):
+                start_order_time = 0
                 start_time = 0
                 message = deliver_order()
                 #NOTE, TUVE QUE USAR LAS SIGUIENTES VARIABLES EN GLOBAL EN LA FUNCION
@@ -557,7 +564,7 @@ while running:
         # Calculate the time elapsed in seconds
         # Time limit code
         if gamestate == 1:
-            elapsed_time_seconds = (pygame.time.get_ticks() - start_time) // 1000
+            elapsed_time_seconds = (pygame.time.get_ticks() - start_order_time) // 1000
             time_left = time_limit - elapsed_time_seconds
 
             if time_left <= 10: time_text_color = (217, 36, 60)
@@ -571,6 +578,7 @@ while running:
             #Deliver order
             if time_left <= 0:
                 start_time = 0
+                start_order_time = 0
                 message = deliver_order()
 
         # Show the message for 2 seconds
@@ -635,6 +643,8 @@ while running:
         elif gamestate == 6:
             camera_central_point_y = 0
             speech.draw(parallax = 0.6)
+            if start_order_time == 0:
+                start_order_time = pygame.time.get_ticks()
 
         else:
             if speech.animation_frame > 0:

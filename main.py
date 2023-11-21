@@ -220,23 +220,33 @@ def calculate_min_max_order(completed_orders):
 
     max_ord = completed_orders//3 + 3
 
-    if min_ord > 4:
-        min_ord = 4
+    if min_ord > 3:
+        min_ord = 3
 
-    if max_ord > 8:
-        max_ord = 8
+    if max_ord > 5:
+        max_ord = 5
 
     return min_ord, max_ord
 
 #create customer order
 def create_order(completed_orders):
     min_ord, max_ord = calculate_min_max_order(completed_orders)
+
     lettuce_num = random.randint(min_ord,max_ord)
     tomato_num = random.randint(min_ord,max_ord)
     meat_num = random.randint(min_ord,max_ord)
-    cheese_num = random.randint(min_ord,max_ord)
-    fish_num = random.randint(min_ord,max_ord)
-    onion_num = random.randint(min_ord,max_ord)
+
+    if completed_orders < 3:
+        cheese_num = 0
+        fish_num = 0
+        onion_num = 0
+    elif completed_orders < 8:
+        cheese_num = random.randint(min_ord,max_ord)
+    elif completed_orders < 12:
+        fish_num = random.randint(min_ord,max_ord)
+    else:
+        onion_num = random.randint(min_ord,max_ord)
+
 
     #Position 0 --> n elements
     #position 1 --> name element
@@ -332,7 +342,7 @@ def restart_game():
     score_value = 0
     angry_bar = AngryBar(10, 10, 300, 40, 100)
 
-    time_limit = 30
+    time_limit = 40
 
     #Declare Delivery guy
     guy = delivery_man.the_guy(screen, -200, 260)

@@ -4,7 +4,7 @@ import json
 pygame.init()
 
 #Background
-background_over_image = pygame.image.load("images/menu_screen_background.png")
+background_over_image = pygame.image.load("images/high_score_background.png")
 background_menu_image = pygame.transform.scale(background_over_image, (1080, 720))
 
 #Continue
@@ -54,9 +54,9 @@ class HighScoreScreen:
     def draw_scores(self):
         high_scores = self.load_sort_scores()
         #Vertical scroll for each score line
-        y_offset = 130
+        y_offset = 280
         #Obtain the top high scores
-        top_scores = high_scores[:10]
+        top_scores = high_scores[:5]
 
         for i, (name, score) in enumerate(top_scores):
             score_text = font.render(f"{i + 1}. {name}: {score}", True, (255, 255, 255))
@@ -66,9 +66,6 @@ class HighScoreScreen:
 
     def draw(self):
         self.screen.blit(background_menu_image, (0, 0))
-        title_surface = title_font.render("Leaderboard", True, (255, 255, 255))
-        title_x = (1080 - title_surface.get_width()) // 2
-        self.screen.blit(title_surface, (title_x, 50))
         main_menu_x = (1080 - main_menu_button_image.get_width()) // 2
         self.screen.blit(main_menu_button_image, (main_menu_x, 635))
 

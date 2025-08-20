@@ -2,30 +2,31 @@ import pygame
 
 pygame.init()
 
-#Background
+# Background
 background_menu_image = pygame.image.load("images/game_over_image.png")
 background_menu_image = pygame.transform.scale(background_menu_image, (1080, 720))
 
-#Continue
+# Continue
 continue_button_image = pygame.image.load("images/buttons/continue_btn.png")
 continue_button_image = pygame.transform.scale(continue_button_image, (350, 100))
 
-#High Score
+# High Score
 high_score_button_image = pygame.image.load("images/buttons/high_score_btn.png")
 high_score_button_image = pygame.transform.scale(high_score_button_image, (350, 100))
 
-#Name font
+# Name font
 name_font = pygame.font.Font("freesansbold.ttf", 64)
 
-#Score font
+# Score font
 score_font = pygame.font.Font("freesansbold.ttf", 32)
 
+
 def name_text(screen):
-    name_text = name_font.render("Input your name", True, (255,255,255))
+    name_text = name_font.render("Input your name", True, (255, 255, 255))
     screen.blit(name_text, (275, 150))
 
-class OverScreen:
 
+class OverScreen:
     def __init__(self, screen):
         self.screen = screen
 
@@ -42,7 +43,7 @@ class OverScreen:
         if high_score_button_rect.collidepoint(mouse_pos):
             return True
         return False
-    
+
     def get_user_name(self, score):
         # Define the initial position for the input box
         input_box_width = 140
@@ -50,10 +51,12 @@ class OverScreen:
         input_box = pygame.Rect(input_box_x, 300, input_box_width, 32)
 
         # Create the Enter button
-        enter_button = pygame.Rect(440, 350, 200, 32)  # Adjusted position and size of the button
+        enter_button = pygame.Rect(
+            440, 350, 200, 32
+        )  # Adjusted position and size of the button
         # Create the colors of the input box when it is active and inactive
-        color_inactive = pygame.Color('lightskyblue3')
-        color_active = pygame.Color('dodgerblue2')
+        color_inactive = pygame.Color("lightskyblue3")
+        color_active = pygame.Color("dodgerblue2")
 
         # Set default color as inactive
         color = color_inactive
@@ -62,7 +65,7 @@ class OverScreen:
         active = False
 
         # Set the default text to empty
-        text = ''
+        text = ""
 
         # When this variable is true, the while loop will end
         done = False
@@ -103,7 +106,9 @@ class OverScreen:
             name_text(self.screen)
 
             # Show user score
-            score_text = score_font.render("Your score: " + str(score), True, (255, 255, 255))
+            score_text = score_font.render(
+                "Your score: " + str(score), True, (255, 255, 255)
+            )
             score_text_rect = score_text.get_rect(center=(1080 // 2, 250))
             self.screen.blit(score_text, score_text_rect.topleft)
 
@@ -112,7 +117,9 @@ class OverScreen:
             txt_surface = font.render(text, True, color)
 
             # Adjusted the position to center the text in the input box
-            self.screen.blit(txt_surface, ((1080 - txt_surface.get_width()) // 2, input_box.y + 5))
+            self.screen.blit(
+                txt_surface, ((1080 - txt_surface.get_width()) // 2, input_box.y + 5)
+            )
 
             # Draw the input box
             pygame.draw.rect(self.screen, color, input_box, 2)
@@ -132,6 +139,6 @@ class OverScreen:
         return text
 
     def draw(self):
-        self.screen.blit(background_menu_image, (0,0))
+        self.screen.blit(background_menu_image, (0, 0))
         self.screen.blit(continue_button_image, (500, 300))
         self.screen.blit(high_score_button_image, (500, 450))

@@ -1,30 +1,34 @@
--HAMBURGER FEVER-
+# HAMBURGER FEVER
 
--0 INSTALLATION FOR MAC OR LINUX
+## Installation (max and linux)
 
-    #use of venv is optional#
-    > python3 -m venv venv
-    > source venv/bin/activate
-    #end of venv commands -- for now#
+Use of venv is optional, thought recommended.
 
-    > pip install numpy
-    > pip install pygame
-    > python main.py
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
-    #remember to deactivate venv if used#
-    > deactivate
+Install dependencies.
 
--1 CONTROLS AND GAMEPLAY
+```bash
+pip install -r requirements.txt
+```
 
-    Use of the mouse is imperative to navigate through menus, 
-    though you can select ingredients during gameplay using 
-    the {s, d, f, j, k, l} keys.
+Execution.
 
-    Press the space key to deliver an order.
+```bash
+python3 main.py
+```
 
--2 NOTES
+## controls and Gameplay
 
-    All relevant files to review can be found on the project root.
-    No need to check inside folders.
+Use of the mouse is imperative to navigate through menus, though you can select
+ingredients during gameplay using the {s, d, f, j, k, l} keys.
 
+Press the space key to deliver an order.
 
+## Notes
+
+All relevant files to review can be found on the project root. No need to check
+inside folders.

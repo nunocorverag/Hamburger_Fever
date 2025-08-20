@@ -18,3 +18,7 @@ highlighting of dependencies.
 > ```
 > Some alternatives of the classic `venv + pip` are
 > [uv](https://docs.astral.sh/uv/) or [poetry](https://python-poetry.org/).
+
+- Missing formatting and static analysis.
+> Fix: Added `format.sh`, which formats and lints with
+> [ruff](https://docs.astral.sh/ruff/).

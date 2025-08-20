@@ -5,6 +5,11 @@
 - Sometimes no ingredients can be selected.
 - Invalid path error due to usage of upper case leters in filenames.
 
+## Documentation
+
+- For github projects use markdown on doc files, especially the readme, to
+improve readability and integration with the platform.
+
 ## Python Coding Standards
 
 - Missing dependency management, needed for replicability and clear

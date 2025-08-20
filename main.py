@@ -22,7 +22,7 @@ screen = pygame.display.set_mode((1080,720))
 pygame.display.set_caption("Hamburguer Fever")
 
 #Background Sound
-mixer.music.load("music/background_music.mp3")
+mixer.music.load("music/skip_the_mayo.wav")
 mixer.music.play(-1)
 
 #Order font
